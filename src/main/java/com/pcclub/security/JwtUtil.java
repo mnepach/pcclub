@@ -3,6 +3,7 @@ package com.pcclub.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +15,11 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
 
-    private String secret = "1234";
+    @Value("${jwt.secret}")
+    private String secret;
+
+    @Value("${jwt.expiration}")
+    private Long expiration;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -25,13 +30,15 @@ public class JwtUtil {
         return claimsResolver.apply(claims);
     }
 
-    public Claims extractAllClaims(String token) { // Изменили с private на public
+    public Claims extractAllClaims(String token) {
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
     }
 
-    public String generateToken(String userDetails) {
+    public String generateToken(String username, String role, Long userId) {
         Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, userDetails);
+        claims.put("role", role);
+        claims.put("id", userId);
+        return createToken(claims, username);
     }
 
     private String createToken(Map<String, Object> claims, String subject) {
@@ -39,7 +46,7 @@ public class JwtUtil {
                 .setClaims(claims)
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 часов
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
     }
