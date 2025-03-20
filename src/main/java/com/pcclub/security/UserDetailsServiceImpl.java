@@ -1,22 +1,48 @@
-@Override
-public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    User user = userRepository.findByPhoneNumber(username);
+package com.pcclub.security;
 
-    if (user != null) {
-        return org.springframework.security.core.userdetails.User.withUsername(username)
-                .password(user.getPasswordHash())
-                .roles(user.getRole())
-                .build();
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+import com.pcclub.model.Admin;
+import com.pcclub.model.User;
+import com.pcclub.repository.AdminRepository;
+import com.pcclub.repository.UserRepository;
+
+import java.util.Collections;
+
+@Service
+public class UserDetailsServiceImpl implements UserDetailsService {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private AdminRepository adminRepository;
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByPhoneNumber(username);
+
+        if (user != null) {
+            return new org.springframework.security.core.userdetails.User(
+                    username,
+                    user.getPasswordHash(),
+                    Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.getRole().toUpperCase()))
+            );
+        }
+
+        Admin admin = adminRepository.findByEmail(username);
+        if (admin != null) {
+            return new org.springframework.security.core.userdetails.User(
+                    username,
+                    admin.getUniqueCode(),
+                    Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + admin.getRole().toUpperCase()))
+            );
+        }
+
+        throw new UsernameNotFoundException("User not found with username: " + username);
     }
-
-    Admin admin = adminRepository.findByEmail(username);
-    if (admin != null) {
-        // Use unique code for admin since there's no password hash
-        return org.springframework.security.core.userdetails.User.withUsername(username)
-                .password(admin.getUniqueCode()) // Fixed: was using user's password
-                .roles(admin.getRole())
-                .build();
-    }
-
-    throw new UsernameNotFoundException("User not found with username: " + username);
 }
