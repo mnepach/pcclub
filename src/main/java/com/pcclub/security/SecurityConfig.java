@@ -48,11 +48,9 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                        // Изменено с ROLE_ADMIN на hasAnyRole или hasRole для корректной работы
-                        .requestMatchers("/api/admin/**").hasAnyAuthority("ROLE_ADMIN", "admin")
-                        // Разрешаем доступ к списку станций для всех
+                        .requestMatchers("/api/auth/login", "/api/auth/register", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers("/api/workstations").permitAll()
+                        .requestMatchers("/api/admin/**").hasAnyAuthority("ROLE_ADMIN", "admin")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
