@@ -33,15 +33,22 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
-        // Проверяем, не является ли запрос публичным
+
         String path = request.getRequestURI();
+        String method = request.getMethod();
+
+        logger.debug("Запрос к пути: {} с методом: {}", path, method);
+
+        // Проверяем, не является ли запрос публичным
         if (path.startsWith("/api/auth/") || path.contains("/swagger-ui/") || path.contains("/v3/api-docs/") ||
-                (path.startsWith("/api/workstations") && request.getMethod().equals("GET"))) {
+                (path.startsWith("/api/workstations") && method.equals("GET"))) {
+            logger.debug("Публичный путь, пропускаем без проверки токена: {}", path);
             chain.doFilter(request, response);
             return;
         }
 
         final String authorizationHeader = request.getHeader("Authorization");
+        logger.debug("Authorization заголовок: {}", authorizationHeader);
 
         String username = null;
         String jwt = null;
@@ -51,29 +58,36 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             jwt = authorizationHeader.substring(7);
             try {
                 username = jwtUtil.extractUsername(jwt);
-                // Получаем роль из токена
                 role = jwtUtil.extractClaim(jwt, claims -> claims.get("role", String.class));
+                logger.debug("Извлечено имя пользователя: {}, роль: {}", username, role);
             } catch (Exception e) {
-                logger.error("Invalid JWT Token: {}", e.getMessage());
+                logger.error("Недействительный JWT токен: {}", e.getMessage());
             }
+        } else {
+            logger.warn("Отсутствует или неверный формат токена Authorization");
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-
             try {
+                UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+                logger.debug("Загружены данные пользователя: {}", username);
+
                 if (jwtUtil.validateToken(jwt, userDetails)) {
-                    // Создаем аутентификацию с правильной ролью из токена
                     SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + role.toUpperCase());
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                             userDetails, null, Collections.singletonList(authority));
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
+                    logger.debug("Аутентификация успешна для пользователя: {}", username);
+                } else {
+                    logger.warn("Токен не прошел валидацию для пользователя: {}", username);
                 }
             } catch (Exception e) {
-                logger.error("Could not validate token: {}", e.getMessage());
+                logger.error("Ошибка при загрузке пользователя: {}", e.getMessage());
             }
         }
+
+        logger.debug("Продолжаем цепочку фильтров");
         chain.doFilter(request, response);
     }
 }
