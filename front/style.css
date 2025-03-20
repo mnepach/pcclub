@@ -172,16 +172,18 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-top: 70px;
+    margin-top: 100px;
+    gap: 30px;
 }
 
 .hero-text {
-    flex: 1;
+    flex: 1.2; /* Make text section wider */
     padding-right: 20px;
 }
 
 .hero-text h2 {
     font-size: 2.5rem;
+    line-height: 1.3;
     margin-bottom: 2rem;
 }
 
@@ -190,35 +192,35 @@ header {
     font-size: 3rem;
 }
 
-.features {
-    margin-bottom: 2rem;
-}
-
-.feature {
-    display: flex;
-    align-items: center;
-    margin-bottom: 1rem;
-}
-
-.feature img {
-    width: 24px;
-    height: 24px;
-    margin-right: 10px;
-}
-
-.hero-buttons {
-    display: flex;
-    gap: 15px;
-}
-
 .hero-image {
-    flex: 1;
+    flex: 0.8; /* Make image section narrower */
     text-align: right;
 }
 
-.hero-image img {
-    max-width: 100%;
-    height: auto;
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .hero-content {
+        flex-direction: column;
+        margin-top: 120px;
+    }
+    
+    .hero-text, .hero-image {
+        flex: 1;
+        width: 100%;
+    }
+    
+    .hero-text {
+        padding-right: 0;
+        text-align: center;
+    }
+    
+    .feature {
+        justify-content: center;
+    }
+    
+    .hero-buttons {
+        justify-content: center;
+    }
 }
 
 /* Games Section */
@@ -439,14 +441,14 @@ header {
     padding-bottom: 20px;
 }
 
-/* Booking Section */
+/* Updated Booking Section Styles */
 .booking {
     background: linear-gradient(to bottom, #05091e, #020510);
     position: relative;
 }
 
 .booking-form {
-    max-width: 600px;
+    max-width: 700px;
     margin: 0 auto;
 }
 
@@ -456,13 +458,30 @@ header {
     gap: 20px;
 }
 
+.form-row {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+}
+
+.form-group {
+    flex: 1;
+}
+
 .booking-form input {
+    width: 100%;
     padding: 15px;
     border-radius: 50px;
     border: none;
     background: rgba(255, 255, 255, 0.1);
     color: var(--text-color);
     font-size: 1rem;
+}
+
+.booking-form input[type="date"],
+.booking-form input[type="time"] {
+    padding-right: 15px;
+    color: var(--text-color);
 }
 
 .booking-form input::placeholder {
@@ -473,19 +492,42 @@ header {
     width: 100%;
     border: none;
     font-size: 1rem;
+    padding: 15px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* Mobile Responsiveness for Booking Form */
+@media (max-width: 768px) {
+    .form-row {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
+
+/* Focus styles for form inputs */
+.booking-form input:focus {
+    outline: none;
+    border: 1px solid var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(0, 114, 255, 0.2);
 }
 
 /* Contact Section */
 .contact {
     background: linear-gradient(to bottom, #020510, #010205);
     height: auto;
-    padding: 100px 0;
+    min-height: 100vh;
+    padding: 80px 0;
+    display: flex;
+    align-items: center;
 }
 
 .contact .container {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
+    gap: 30px;
 }
 
 .contact-info {
@@ -507,6 +549,7 @@ header {
     width: 24px;
     height: 24px;
     margin-right: 15px;
+    margin-top: 5px;
 }
 
 .contact-item h4 {
@@ -516,11 +559,30 @@ header {
 
 .map {
     flex: 1;
+    height: 300px;
 }
 
-.map img {
-    width: 100%;
-    border-radius: 15px;
+/* Update footer address too */
+.footer-contact .contact-item:first-child div p:first-of-type {
+    content: "пр. Победителей, 7";
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .contact .container {
+        flex-direction: column;
+    }
+    
+    .contact-info {
+        padding-right: 0;
+        margin-bottom: 30px;
+    }
+}
+
+@media (max-width: 576px) {
+    .contact {
+        padding: 60px 0;
+    }
 }
 
 /* Footer */
