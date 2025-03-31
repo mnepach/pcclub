@@ -24,6 +24,7 @@ body {
     color: var(--text-color);
     background-color: var(--dark-color);
     line-height: 1.6;
+    padding-top: 80px; /* Added padding to account for fixed header */
 }
 
 .container {
@@ -101,14 +102,23 @@ ul {
     margin-top: 2rem;
 }
 
-/* Header & Navigation */
+/* Fixed Header & Navigation */
+.main-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--dark-color);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
 header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 0;
+    padding: 15px 0;
     width: 100%;
-    z-index: 100;
 }
 
 .logo h1 {
@@ -148,6 +158,8 @@ header {
     background: linear-gradient(to right, rgba(10, 14, 49, 0.8), rgba(10, 14, 49, 0.8));
     position: relative;
     overflow: hidden;
+    margin-top: -80px; /* To counter the padding-top on body */
+    padding-top: 80px;
 }
 
 .hero::before {
@@ -196,8 +208,7 @@ header {
 .hero-text h2 span {
     color: var(--primary-color);
     font-size: 3.2rem;
-    display: block;
-    margin-top: 0.5rem;
+    display: inline; /* Changed from block to inline */
 }
 
 .hero-image {
@@ -831,6 +842,14 @@ header {
 }
 
 @media (max-width: 768px) {
+    body {
+        padding-top: 120px; /* Adjusted for stacked header on mobile */
+    }
+    
+    .main-header {
+        height: auto;
+    }
+    
     header {
         flex-direction: column;
         gap: 20px;
@@ -848,6 +867,11 @@ header {
     
     .navbar ul li {
         margin: 5px 10px;
+    }
+    
+    .hero {
+        margin-top: -120px; /* Adjusted for stacked header on mobile */
+        padding-top: 120px;
     }
     
     .hero-text h2 {
