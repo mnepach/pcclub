@@ -17,7 +17,6 @@
 
 html {
     scroll-behavior: smooth;
-    scroll-snap-type: y mandatory;
 }
 
 body {
@@ -28,18 +27,16 @@ body {
 }
 
 .container {
-    max-width: 1000px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
 }
 
 section {
-    height: 100vh;
-    scroll-snap-align: start;
+    min-height: 100vh;
     display: flex;
     align-items: center;
     position: relative;
-    overflow: hidden;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -110,15 +107,8 @@ header {
     justify-content: space-between;
     align-items: center;
     padding: 20px 0;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
+    width: 100%;
     z-index: 100;
-}
-
-.logo {
-    margin-left: 40px; /* Adjusted to match hero-text padding-left */
 }
 
 .logo h1 {
@@ -136,16 +126,12 @@ header {
     color: var(--text-color);
 }
 
-.navbar {
-    margin-right: 40px; /* Adjusted to be consistent with left margin */
-}
-
 .navbar ul {
     display: flex;
 }
 
 .navbar ul li {
-    margin: 0 10px;
+    margin: 0 15px;
 }
 
 .navbar ul li a {
@@ -159,7 +145,7 @@ header {
 
 /* Hero Section */
 .hero {
-    background: linear-gradient(to right, var(--dark-color), rgba(10, 14, 49, 0.9));
+    background: linear-gradient(to right, rgba(10, 14, 49, 0.8), rgba(10, 14, 49, 0.8));
     position: relative;
     overflow: hidden;
 }
@@ -172,7 +158,20 @@ header {
     width: 100%;
     height: 100%;
     background: url('img/ellipse-5.svg') no-repeat center center;
+    background-size: cover;
     opacity: 0.1;
+    z-index: -1;
+}
+
+/* Dark overlay for hero section only */
+.hero::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.4) 70%, rgba(0, 0, 0, 0) 100%);
     z-index: -1;
 }
 
@@ -180,36 +179,92 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-top: 60px; /* Increased to push content down from header */
-    gap: 20px; /* Reduced gap between text and image */
+    width: 100%;
 }
 
 .hero-text {
-    flex: 1.5; /* Increased to give more space to text */
-    padding-left: 40px; /* Matched with logo margin */
-    padding-right: 0; /* Removed right padding to move text leftward */
+    flex: 1;
+    padding-right: 2rem;
 }
 
 .hero-text h2 {
-    font-size: 2.5rem;
-    line-height: 1.3;
+    font-size: 2.8rem;
+    line-height: 1.2;
     margin-bottom: 2rem;
-    text-align: left;
 }
 
 .hero-text h2 span {
     color: var(--primary-color);
-    font-size: 3rem;
+    font-size: 3.2rem;
+    display: block;
+    margin-top: 0.5rem;
 }
 
 .hero-image {
-    flex: 1; /* Reduced to allow more space for text */
-    text-align: right;
-    padding-right: 20px; /* Added padding to keep image from touching edge */
+    flex: 1;
+    position: relative;
+}
+
+.hero-image img {
+    max-width: 100%;
+    display: block;
+}
+
+/* Speech bubbles */
+.feature-bubble {
+    position: absolute;
+    background-color: var(--primary-color);
+    border-radius: 10px;
+    padding: 12px;
+    color: white;
+    font-size: 0.9rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    z-index: 2;
+}
+
+.feature-bubble:after {
+    content: '';
+    position: absolute;
+    border: 10px solid transparent;
+}
+
+.feature-bubble.top-right {
+    top: 20%;
+    right: -60px;
+}
+
+.feature-bubble.top-right:after {
+    top: 50%;
+    left: -10px;
+    margin-top: -10px;
+    border-right-color: var(--primary-color);
+}
+
+.feature-bubble.bottom-left {
+    bottom: 30%;
+    left: -40px;
+}
+
+.feature-bubble.bottom-left:after {
+    top: 50%;
+    right: -10px;
+    margin-top: -10px;
+    border-left-color: var(--primary-color);
+}
+
+.feature-bubble.top-left {
+    top: 10%;
+    left: 20%;
+}
+
+.feature-bubble.top-left:after {
+    bottom: -10px;
+    left: 20px;
+    border-top-color: var(--primary-color);
 }
 
 .features {
-    text-align: left;
+    margin-top: 1.5rem;
 }
 
 .feature {
@@ -225,14 +280,13 @@ header {
 }
 
 .feature p {
-    max-width: 90%;
     line-height: 1.4;
 }
 
 .hero-buttons {
     display: flex;
     gap: 15px;
-    margin-top: 20px;
+    margin-top: 25px;
 }
 
 /* Games Section */
@@ -263,13 +317,12 @@ header {
 .game-card {
     background: rgba(255, 255, 255, 0.05);
     border-radius: 15px;
-    padding: 0; /* Removed padding to allow images to fill the card */
     text-align: center;
     transition: all 0.3s ease;
     cursor: pointer;
     position: relative;
     overflow: hidden;
-    height: 200px; /* Fixed height for consistent card size */
+    height: 200px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -281,15 +334,20 @@ header {
     background: rgba(255, 255, 255, 0.1);
 }
 
+.game-image {
+    width: 100%;
+    height: 100%;
+}
+
 .game-card img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Ensures image covers the entire card without distortion */
+    object-fit: cover;
     transition: transform 0.3s ease;
 }
 
 .game-card:hover img {
-    transform: scale(1.05); /* Slight zoom effect on hover */
+    transform: scale(1.05);
 }
 
 .game-card h4 {
@@ -297,10 +355,9 @@ header {
     font-size: 1.5rem;
     color: var(--text-color);
     z-index: 2;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6); /* Added shadow for better visibility */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
 }
 
-/* Add an overlay for better text readability over images */
 .game-card::after {
     content: '';
     position: absolute;
@@ -314,7 +371,7 @@ header {
 }
 
 .game-card:hover::after {
-    background: rgba(0, 0, 0, 0.1); /* Lighter overlay on hover */
+    background: rgba(0, 0, 0, 0.1);
 }
 
 /* Pricing Section */
@@ -550,9 +607,7 @@ header {
     background: linear-gradient(180deg, var(--dark-color), #000000);
     padding: 50px 0 20px;
     position: relative;
-    height: auto;
     min-height: 80vh;
-    scroll-snap-align: start;
 }
 
 .footer-section .container {
@@ -728,7 +783,6 @@ header {
     
     .hero-text {
         padding-right: 0;
-        padding-left: 0;
         text-align: center;
     }
     
@@ -763,6 +817,17 @@ header {
         padding-right: 0;
         margin-bottom: 30px;
     }
+    
+    /* Adjust feature bubbles on smaller screens */
+    .feature-bubble {
+        position: static;
+        margin: 10px auto;
+        max-width: 80%;
+    }
+    
+    .feature-bubble:after {
+        display: none;
+    }
 }
 
 @media (max-width: 768px) {
@@ -773,12 +838,7 @@ header {
     }
     
     .logo {
-        margin-left: 0;
         text-align: center;
-    }
-    
-    .navbar {
-        margin-right: 0;
     }
     
     .navbar ul {
@@ -788,10 +848,6 @@ header {
     
     .navbar ul li {
         margin: 5px 10px;
-    }
-    
-    .hero {
-        padding-top: 120px;
     }
     
     .hero-text h2 {
@@ -863,7 +919,7 @@ header {
     }
 }
 
-.hero-text, .hero-image, .section-header, .game-card, .about-card, .faq-item {
+.hero-text, .hero-image, .section-header, .game-card, .about-card, .faq-item, .feature-bubble {
     animation: fadeIn 0.5s ease forwards;
 }
 
@@ -873,6 +929,18 @@ header {
 
 .hero-image {
     animation-delay: 0.4s;
+}
+
+.feature-bubble.top-right {
+    animation-delay: 0.6s;
+}
+
+.feature-bubble.bottom-left {
+    animation-delay: 0.8s;
+}
+
+.feature-bubble.top-left {
+    animation-delay: 1s;
 }
 
 .section-header {
@@ -893,53 +961,6 @@ header {
 
 .game-card:nth-child(4), .about-card:nth-child(4) {
     animation-delay: 0.5s;
-}
-
-/* Additional Styles for Dark Mode */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --primary-color: #00a8ff;
-        --secondary-color: #00e1ff;
-    }
-}
-
-/* Active Navigation Link Styles */
-.navbar ul li a.active {
-    color: var(--accent-color);
-    font-weight: 700;
-}
-
-/* Button hover effects */
-.btn.primary:hover {
-    background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
-}
-
-.btn.secondary:hover {
-    background: rgba(255, 255, 255, 0.2);
-}
-
-/* Game card hover effects */
-.game-card:hover {
-    transform: translateY(-5px) scale(1.02);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-}
-
-/* Additional styling for form elements */
-.booking-form input:focus,
-.admin-login input:focus {
-    outline: none;
-    border: 1px solid var(--primary-color);
-    box-shadow: 0 0 0 2px rgba(0, 114, 255, 0.2);
-}
-
-.booking-form button:active,
-.admin-login button:active {
-    transform: scale(0.98);
-}
-
-/* Hover effect for social icons */
-.social-icons a:hover img {
-    filter: brightness(1.2);
 }
 
 /* Custom scrollbar */
