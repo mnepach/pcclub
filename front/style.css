@@ -28,7 +28,7 @@ body {
 }
 
 .container {
-    max-width: 1000px; /* Reduced from 1200px */
+    max-width: 1000px;
     margin: 0 auto;
     padding: 0 20px;
 }
@@ -118,7 +118,7 @@ header {
 }
 
 .logo {
-    margin-left: 50px; /* Reduced from 100px */
+    margin-left: 40px; /* Adjusted to match hero-text padding-left */
 }
 
 .logo h1 {
@@ -137,7 +137,7 @@ header {
 }
 
 .navbar {
-    margin-right: 60px; /* Moved left by reducing right margin */
+    margin-right: 40px; /* Adjusted to be consistent with left margin */
 }
 
 .navbar ul {
@@ -145,11 +145,11 @@ header {
 }
 
 .navbar ul li {
-    margin: 0 10px; /* Reduced from 12px */
+    margin: 0 10px;
 }
 
 .navbar ul li a {
-    font-size: 0.95rem; /* Slightly reduced font size */
+    font-size: 0.95rem;
     font-weight: 500;
 }
 
@@ -180,14 +180,14 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-top: 20px;
-    gap: 30px;
+    margin-top: 60px; /* Increased to push content down from header */
+    gap: 20px; /* Reduced gap between text and image */
 }
 
 .hero-text {
-    flex: 1.2;
-    padding-right: 20px;
-    padding-left: 40px;
+    flex: 1.5; /* Increased to give more space to text */
+    padding-left: 40px; /* Matched with logo margin */
+    padding-right: 0; /* Removed right padding to move text leftward */
 }
 
 .hero-text h2 {
@@ -203,8 +203,9 @@ header {
 }
 
 .hero-image {
-    flex: 0.8;
+    flex: 1; /* Reduced to allow more space for text */
     text-align: right;
+    padding-right: 20px; /* Added padding to keep image from touching edge */
 }
 
 .features {
@@ -214,7 +215,7 @@ header {
 .feature {
     display: flex;
     align-items: flex-start;
-    margin-bottom: 15px; /* Increased to space out features more */
+    margin-bottom: 15px;
 }
 
 .feature img {
@@ -224,8 +225,8 @@ header {
 }
 
 .feature p {
-    max-width: 90%; /* Added to make text wrap into multiple lines */
-    line-height: 1.4; /* Improved line height for multi-line text */
+    max-width: 90%;
+    line-height: 1.4;
 }
 
 .hero-buttons {
@@ -262,12 +263,16 @@ header {
 .game-card {
     background: rgba(255, 255, 255, 0.05);
     border-radius: 15px;
-    padding: 40px;
+    padding: 0; /* Removed padding to allow images to fill the card */
     text-align: center;
     transition: all 0.3s ease;
     cursor: pointer;
     position: relative;
     overflow: hidden;
+    height: 200px; /* Fixed height for consistent card size */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .game-card:hover {
@@ -276,9 +281,40 @@ header {
     background: rgba(255, 255, 255, 0.1);
 }
 
+.game-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures image covers the entire card without distortion */
+    transition: transform 0.3s ease;
+}
+
+.game-card:hover img {
+    transform: scale(1.05); /* Slight zoom effect on hover */
+}
+
 .game-card h4 {
+    position: absolute;
     font-size: 1.5rem;
     color: var(--text-color);
+    z-index: 2;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6); /* Added shadow for better visibility */
+}
+
+/* Add an overlay for better text readability over images */
+.game-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 1;
+    transition: background 0.3s ease;
+}
+
+.game-card:hover::after {
+    background: rgba(0, 0, 0, 0.1); /* Lighter overlay on hover */
 }
 
 /* Pricing Section */
@@ -452,14 +488,10 @@ header {
     padding-bottom: 20px;
 }
 
-/* Booking Section - Updated to only have the form */
-.booking-contact {
-    background: linear-gradient(to bottom, #031031, #020a25);
+/* Booking Section */
+.booking {
+    background: linear-gradient(to bottom, #031031, #0a0e31);
     position: relative;
-    height: auto;
-    min-height: 60vh;
-    padding: 60px 0;
-    scroll-snap-align: start;
 }
 
 .booking-section {
@@ -513,7 +545,7 @@ header {
     transition: all 0.3s ease;
 }
 
-/* Footer - Updated to include map and admin login */
+/* Footer */
 .footer-section {
     background: linear-gradient(180deg, var(--dark-color), #000000);
     padding: 50px 0 20px;
@@ -537,8 +569,8 @@ header {
 
 .footer-info {
     flex: 1;
-    min-width: 220px; /* Reduced from 250px */
-    padding-right: 20px; /* Reduced from 30px */
+    min-width: 220px;
+    padding-right: 20px;
     margin-bottom: 20px;
 }
 
@@ -582,11 +614,11 @@ header {
 
 .footer-links {
     display: flex;
-    gap: 30px; /* Reduced from 50px */
+    gap: 30px;
     flex-wrap: wrap;
-    min-width: 260px; /* Reduced from 300px */
+    min-width: 260px;
     margin-bottom: 20px;
-    margin-right: 20px; /* Added to move links leftward */
+    margin-right: 20px;
 }
 
 .footer-nav h4, 
@@ -621,11 +653,11 @@ header {
     margin-bottom: 5px;
 }
 
-/* Admin Login Styles - UPDATED */
+/* Admin Login Styles */
 .admin-login {
-    min-width: 280px; /* Increased from 250px */
-    background: rgba(255, 255, 255, 0.03); /* Made more translucent: from 0.05 to 0.03 */
-    padding: 25px; /* Increased from 20px for more space */
+    min-width: 280px;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 25px;
     border-radius: 10px;
     margin-bottom: 20px;
 }
@@ -643,7 +675,7 @@ header {
 .login-step {
     display: none;
     flex-direction: column;
-    gap: 12px; /* Increased from 10px */
+    gap: 12px;
 }
 
 .login-step.active {
@@ -666,11 +698,11 @@ header {
 
 .admin-login button {
     width: 100%;
-    padding: 12px; /* Increased from 10px */
+    padding: 12px;
     font-size: 0.9rem;
 }
 
-/* Footer Map - UPDATED */
+/* Footer Map */
 .footer-map {
     width: 100%;
     height: 250px;
@@ -696,6 +728,20 @@ header {
     
     .hero-text {
         padding-right: 0;
+        padding-left: 0;
+        text-align: center;
+    }
+    
+    .features {
+        text-align: center;
+    }
+    
+    .feature {
+        justify-content: center;
+    }
+    
+    .hero-buttons {
+        justify-content: center;
     }
     
     .games-grid {
