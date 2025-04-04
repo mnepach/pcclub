@@ -945,6 +945,164 @@ header {
     }
 }
 
+/* Add this after your current CSS, before the media queries section */
+
+/* Decorative elements for section headers */
+.section-header h3 {
+    position: relative;
+    display: inline-block;
+}
+
+.section-header h3::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+}
+
+/* Background decorations for different sections */
+.hero::before {
+    background: radial-gradient(circle at 30% 20%, rgba(0, 114, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 70% 60%, rgba(0, 198, 255, 0.1) 0%, transparent 60%);
+}
+
+.games::before {
+    background: 
+        linear-gradient(45deg, transparent 49.5%, var(--primary-color) 49.5%, var(--primary-color) 50.5%, transparent 50.5%) 0 0/30px 30px,
+        linear-gradient(-45deg, transparent 49.5%, var(--secondary-color) 49.5%, var(--secondary-color) 50.5%, transparent 50.5%) 0 0/30px 30px;
+    opacity: 0.03;
+}
+
+.pricing::before {
+    background: 
+        radial-gradient(circle, rgba(0, 114, 255, 0.05) 1px, transparent 1px) 0 0/20px 20px;
+}
+
+.about {
+    position: relative;
+    overflow: hidden;
+}
+
+.about::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        linear-gradient(90deg, transparent 98%, rgba(255, 255, 255, 0.08) 98%, rgba(255, 255, 255, 0.08) 100%) 0 0/50px 50px,
+        linear-gradient(0deg, transparent 98%, rgba(255, 255, 255, 0.08) 98%, rgba(255, 255, 255, 0.08) 100%) 0 0/50px 50px;
+    z-index: -1;
+}
+
+.faq::before {
+    background: 
+        linear-gradient(135deg, transparent 45%, rgba(0, 114, 255, 0.1) 45%, rgba(0, 114, 255, 0.1) 55%, transparent 55%) 0 0/20px 20px;
+}
+
+.booking {
+    position: relative;
+    overflow: hidden;
+}
+
+.booking::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        linear-gradient(135deg, transparent 45%, rgba(255, 255, 255, 0.03) 45%, rgba(255, 255, 255, 0.03) 55%, transparent 55%) 0 0/30px 30px;
+    z-index: -1;
+}
+
+/* Corner decorations for cards */
+.about-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 30px;
+    height: 30px;
+    border-top: 2px solid var(--primary-color);
+    border-right: 2px solid var(--primary-color);
+    opacity: 0.7;
+}
+
+.about-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 30px;
+    height: 30px;
+    border-bottom: 2px solid var(--primary-color);
+    border-left: 2px solid var(--primary-color);
+    opacity: 0.7;
+}
+
+/* Make about cards have position relative for the corner decorations */
+.about-card {
+    position: relative;
+}
+
+/* Add starry background to footer */
+.footer-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(white 1px, transparent 1px),
+        radial-gradient(white 1px, transparent 1px);
+    background-size: 50px 50px;
+    background-position: 0 0, 25px 25px;
+    opacity: 0.03;
+    z-index: -1;
+}
+
+/* Add decorative dividers for pricing tabs */
+.pricing-tabs .tab:not(:last-child)::after {
+    content: '•';
+    position: absolute;
+    right: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray-color);
+}
+
+.pricing-tabs .tab {
+    position: relative;
+}
+
+/* Add subtle glowing dots to the hero background */
+@keyframes glowing {
+    0% { opacity: 0.3; }
+    50% { opacity: 0.7; }
+    100% { opacity: 0.3; }
+}
+
+.hero::after {
+    content: '';
+    background: radial-gradient(circle, var(--primary-color) 1px, transparent 1px) 0 0/100px 100px;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    opacity: 0.05;
+    animation: glowing 4s infinite;
+}
+
 .hero-text, .hero-image, .section-header, .game-card, .about-card, .faq-item, .feature-bubble {
     animation: fadeIn 0.5s ease forwards;
 }
