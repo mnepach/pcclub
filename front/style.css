@@ -25,7 +25,6 @@ body {
     color: var(--text-color);
     background-color: var(--dark-color);
     line-height: 1.6;
-    padding-top: 80px; /* Added to account for fixed header */
 }
 
 .container {
@@ -106,12 +105,18 @@ ul {
 
 /* Header & Navigation - Modified to be fixed */
 .main-header {
-    position: absolute;
-    top: 0;
-    left: 0;
+    position: relative;
     width: 100%;
     z-index: 1000;
     padding: 15px 0;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.7));
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.main-header .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
 }
 
 header {
@@ -169,6 +174,16 @@ header {
     background: linear-gradient(to right, rgba(10, 14, 49, 0.8), rgba(10, 14, 49, 0.8));
     position: relative;
     overflow: hidden;
+    display: flex; /* Добавляем flex для вертикального расположения */
+    flex-direction: column; /* Устанавливаем направление column */
+    min-height: 100vh; 
+    scroll-snap-align: start;
+}
+
+.hero .container {
+    display: flex;
+    flex-direction: column; /* Контейнер тоже вертикальный */
+    flex-grow: 1; /* Позволяет растягиваться */
 }
 
 .hero::before {
@@ -192,7 +207,7 @@ header {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.4) 70%, rgba(0, 0, 0, 0) 100%);
+    background: linear-gradient(to bottom, #00c6ff 0%, #0072ff 70%, #0a0e31 100%);
     z-index: -1;
 }
 
@@ -201,7 +216,7 @@ header {
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    padding-top: 30px; /* Added padding to account for fixed header */
+    flex-grow: 1; /* Растягиваем hero-content, чтобы он занимал остальное место */
 }
 
 .hero-text {
@@ -802,6 +817,10 @@ header {
         flex-direction: column;
         gap: 30px;
     }
+
+    .main-header {
+        padding: 10px 0; /* Уменьшаем отступы для мобильных устройств */
+    }
     
     .hero-text {
         padding-right: 0;
@@ -853,9 +872,6 @@ header {
 }
 
 @media (max-width: 768px) {
-    body {
-        padding-top: 120px; /* Increased to account for stacked header on mobile */
-    }
     
     header {
         flex-direction: column;
@@ -1163,9 +1179,4 @@ header {
 
 ::-webkit-scrollbar-thumb:hover {
     background: var(--secondary-color);
-}
-
-/* Smooth scrolling for navigation links */
-html {
-    scroll-padding-top: 80px; /* Equal to the header height to account for the fixed header */
 }
