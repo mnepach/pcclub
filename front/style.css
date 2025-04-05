@@ -109,8 +109,8 @@ ul {
     width: 100%;
     z-index: 1000;
     padding: 15px 0;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.7));
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: transparent;
+    border-bottom: 3px solid rgba(22, 4, 57, 0.1);
 }
 
 .main-header .container {
@@ -171,11 +171,11 @@ header {
 
 /* Hero Section */
 .hero {
-    background: linear-gradient(to right, rgba(10, 14, 49, 0.8), rgba(10, 14, 49, 0.8));
+    background: linear-gradient(#000000, var(--dark-color));
     position: relative;
     overflow: hidden;
-    display: flex; /* Добавляем flex для вертикального расположения */
-    flex-direction: column; /* Устанавливаем направление column */
+    display: flex;
+    flex-direction: column;
     min-height: 100vh; 
     scroll-snap-align: start;
 }
@@ -207,16 +207,17 @@ header {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to bottom, #00c6ff 0%, #0072ff 70%, #0a0e31 100%);
+    background: linear-gradient(to bottom, #000000 0%, var(--primary-color) 70%, var(--dark-color) 100%);
     z-index: -1;
 }
 
 .hero-content {
     display: flex;
-    align-items: center;
+    align-items: flex-start; /* Change from center to flex-start */
     justify-content: space-between;
     width: 100%;
-    flex-grow: 1; /* Растягиваем hero-content, чтобы он занимал остальное место */
+    flex-grow: 1;
+    padding-top: 80px; /* Add padding to position text higher */
 }
 
 .hero-text {
@@ -228,10 +229,11 @@ header {
     font-size: 2.8rem;
     line-height: 1.2;
     margin-bottom: 2rem;
+    color: white;
 }
 
-.hero-text h2 span {
-    color: var(--primary-color);
+.hero-text h2 span.brand {
+    color: var(--primary-color); /* Blue color for GameOn */
     font-size: 3.2rem;
     display: block;
     margin-top: 0.5rem;
@@ -476,16 +478,35 @@ header {
 }
 
 .about-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end; /* Align items to the bottom */
+    gap: 20px;
 }
 
 .about-card {
+    flex: 1;
     background: rgba(255, 255, 255, 0.05);
     border-radius: 15px;
     padding: 30px;
     transition: all 0.3s ease;
+}
+
+/* Create the staggered heights */
+.about-card:nth-child(1) {
+    margin-top: 80px; /* Tallest card (leftmost) */
+}
+
+.about-card:nth-child(2) {
+    margin-top: 60px;
+}
+
+.about-card:nth-child(3) {
+    margin-top: 40px;
+}
+
+.about-card:nth-child(4) {
+    margin-top: 20px; /* Shortest card (rightmost) */
 }
 
 .about-card:hover {
@@ -961,83 +982,6 @@ header {
     }
 }
 
-/* Add this after your current CSS, before the media queries section */
-
-/* Decorative elements for section headers */
-.section-header h3 {
-    position: relative;
-    display: inline-block;
-}
-
-.section-header h3::after {
-    content: '';
-    position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60px;
-    height: 3px;
-    background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
-}
-
-/* Background decorations for different sections */
-.hero::before {
-    background: radial-gradient(circle at 30% 20%, rgba(0, 114, 255, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 70% 60%, rgba(0, 198, 255, 0.1) 0%, transparent 60%);
-}
-
-.games::before {
-    background: 
-        linear-gradient(45deg, transparent 49.5%, var(--primary-color) 49.5%, var(--primary-color) 50.5%, transparent 50.5%) 0 0/30px 30px,
-        linear-gradient(-45deg, transparent 49.5%, var(--secondary-color) 49.5%, var(--secondary-color) 50.5%, transparent 50.5%) 0 0/30px 30px;
-    opacity: 0.03;
-}
-
-.pricing::before {
-    background: 
-        radial-gradient(circle, rgba(0, 114, 255, 0.05) 1px, transparent 1px) 0 0/20px 20px;
-}
-
-.about {
-    position: relative;
-    overflow: hidden;
-}
-
-.about::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: 
-        linear-gradient(90deg, transparent 98%, rgba(255, 255, 255, 0.08) 98%, rgba(255, 255, 255, 0.08) 100%) 0 0/50px 50px,
-        linear-gradient(0deg, transparent 98%, rgba(255, 255, 255, 0.08) 98%, rgba(255, 255, 255, 0.08) 100%) 0 0/50px 50px;
-    z-index: -1;
-}
-
-.faq::before {
-    background: 
-        linear-gradient(135deg, transparent 45%, rgba(0, 114, 255, 0.1) 45%, rgba(0, 114, 255, 0.1) 55%, transparent 55%) 0 0/20px 20px;
-}
-
-.booking {
-    position: relative;
-    overflow: hidden;
-}
-
-.booking::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: 
-        linear-gradient(135deg, transparent 45%, rgba(255, 255, 255, 0.03) 45%, rgba(255, 255, 255, 0.03) 55%, transparent 55%) 0 0/30px 30px;
-    z-index: -1;
-}
-
 /* Corner decorations for cards */
 .about-card::before {
     content: '';
@@ -1068,22 +1012,6 @@ header {
     position: relative;
 }
 
-/* Add starry background to footer */
-.footer-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: 
-        radial-gradient(white 1px, transparent 1px),
-        radial-gradient(white 1px, transparent 1px);
-    background-size: 50px 50px;
-    background-position: 0 0, 25px 25px;
-    opacity: 0.03;
-    z-index: -1;
-}
 
 /* Add decorative dividers for pricing tabs */
 .pricing-tabs .tab:not(:last-child)::after {
