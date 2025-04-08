@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GameOn - Cyber Sport Club</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500&family=Nico+Moji&family=Roboto:wght@300;400;500;700&family=Russo+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -187,7 +187,11 @@
     <section class="faq" id="faq">
         <div class="container">
             <div class="section-header">
-                <h3>Ответы на частые вопросы</h3>
+                <h3>
+                    <span class="staircase">Ответы</span><br>
+                    <span class="staircase">на частые</span><br>
+                    <span class="staircase">вопросы</span>
+                </h3>
                 <p>Мы знаем, что у вас появились вопросы, мы постарались перечислить наиболее важные из них</p>
             </div>
             <div class="faq-list">
@@ -257,11 +261,12 @@
                                 <input type="time" required>
                             </div>
                         </div>
-                        <button type="submit" class="btn primary">Забронировать</button>
+                        <button type="submit" class="btn primary">Зарегистрироваться</button>
                     </form>
                 </div>
             </div>
         </div>
+        
     </section>
 
 
@@ -277,13 +282,19 @@
                         <h3>GameOn</h3>
                         <p>Cyber <span>Sport</span> Club</p>
                     </div>
-                    <p>Просторный BOOTCAMP на 5 ПК (GTX 4060, 240Hz). Бронируйте заранее по телефону!</p>
+                    <p>Просторный BOOTCAMP на 5 ПК (GTX 4060, 240Hz).<br> Бронируйте заранее по телефону!</p>
                     <div class="social-links">
                         <h4>Социальные сети</h4>
                         <div class="social-icons">
-                            <a href="#"><img src="img/instagram.svg" alt="Instagram"></a>
-                            <a href="#"><img src="img/youtube.svg" alt="YouTube"></a>
-                            <a href="#"><img src="img/twitter.svg" alt="Twitter"></a>
+                            <a href="https://www.instagram.com/sxkuradesu/" target="_blank">
+                                <img src="img/instagram.svg" alt="Instagram">
+                            </a>
+                            <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley" target="_blank">
+                                <img src="img/youtube.svg" alt="YouTube">
+                            </a>
+                            <a href="https://x.com/home" target="_blank">
+                                <img src="img/twitter.svg" alt="Twitter">
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -340,34 +351,36 @@
     <!-- Add JavaScript for admin login toggle -->
     <script>
         // Simple tabs functionality
-        document.querySelectorAll('.tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                // Remove active class from all tabs
-                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                // Add active class to clicked tab
-                tab.classList.add('active');
-                
-                // Hide all tab content
-                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-                // Show content for clicked tab
-                document.getElementById(`${tab.dataset.tab}-content`).classList.add('active');
-            });
-        });
-    
-        // FAQ toggle
-        document.querySelectorAll('.faq-question').forEach(question => {
-            question.addEventListener('click', () => {
-                const item = question.parentElement;
-                item.classList.toggle('active');
-            });
-        });
-        
-        // Admin login form toggle
-        document.getElementById('admin-email-submit').addEventListener('click', function(e) {
-            e.preventDefault();
-            document.getElementById('email-form').classList.remove('active');
-            document.getElementById('password-form').classList.add('active');
-        });
+document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+        document.getElementById(`${tab.dataset.tab}-content`).classList.add('active');
+    });
+});
+
+// FAQ toggle
+document.querySelectorAll('.faq-question').forEach(question => {
+    question.addEventListener('click', () => {
+        const item = question.parentElement;
+        item.classList.toggle('active');
+    });
+});
+
+// Admin login form toggle
+document.getElementById('admin-email-submit').addEventListener('click', function(e) {
+    e.preventDefault();
+    document.getElementById('email-form').classList.remove('active');
+    document.getElementById('password-form').classList.add('active');
+});
+
+// Booking form step toggle
+document.getElementById('booking-submit').addEventListener('click', function(e) {
+    e.preventDefault();
+    document.getElementById('booking-step-1').classList.remove('active');
+    document.getElementById('booking-step-2').classList.add('active');
+});
     </script>
 </body>
 </html>

@@ -1,3 +1,10 @@
+@font-face {
+    font-family: 'Nico Moji';
+    src: url('fonts/NicoMoji-Regular.ttf') format('truetype'); /* Указываем путь к файлу шрифта */
+    font-weight: normal;
+    font-style: normal;
+}
+
 /* General Styles */
 * {
     margin: 0;
@@ -140,13 +147,14 @@ header {
 .logo h1 {
     font-size: 2.5rem;
     color: var(--primary-color);
-    margin: 0;
+    margin: -10px; /* прижать ближе к лого */
     font-family: 'Nico Moji', sans-serif;
 }
 
 .logo p {
     font-size: 1rem;
     color: var(--text-color);
+    font-family: 'Russo One', sans-serif;
 }
 
 .logo span {
@@ -237,7 +245,7 @@ header {
     padding-right: 2rem;
 }
 
-.hero-text h2 {
+.hero-text h2 { 
     font-size: 2.8rem;
     line-height: 1.2;
     margin-bottom: 2rem;
@@ -246,18 +254,22 @@ header {
 }
 
 .hero-text h2 span.brand {
-    color: var(--primary-color); /* Blue color for GameOn */
+    color: var(--primary-color);
     font-size: 3.2rem;
-    white-space: nowrap; /* Предотвращаем перенос слова "GameOn" */
+    white-space: nowrap;
+    font-family: 'Nico Moji', sans-serif; /* Добавляем шрифт Nico Moji */
 }
 
 .hero-image {
     flex: 1;
     position: relative;
+    display: flex;
+    justify-content: flex-end; /* Прижимаем содержимое к правому краю */
 }
 
 .hero-image img {
-    max-width: 100%;
+    width: 120%; /* Увеличиваем размер изображения */
+    max-width: none; /* Убираем ограничение по максимальной ширине */
     display: block;
 }
 
@@ -492,6 +504,7 @@ header {
 .about {
     background: linear-gradient(to bottom, #3D74DA, var(--dark-color));
     position: relative;
+    z-index: 0;
 }
 
 .about::before {
@@ -499,12 +512,11 @@ header {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 50%; /* Занимает верхнюю половину секции */
-    background: url('img/cloudss.gif') no-repeat center top;
-    background-size: cover; /* Растягиваем гифку на всю ширину */
-    opacity: 0.3; /* Делаем облака слегка прозрачными, чтобы они не отвлекали */
-    z-index: -2; /* Помещаем под всеми слоями */
+    width: 100%; /* От левого края до правого */
+    height: 50%; /* Верхняя половина секции */
+    background: url('img/cloudss.gif') no-repeat center top; /* GIF как фон */
+    background-size: cover; /* Растягиваем, чтобы заполнить область */
+    z-index: -2; /* Под всеми слоями */
 }
 
 .about-grid {
@@ -516,8 +528,8 @@ header {
 
 .about-card {
     flex: 1;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 15px;
+    background: rgba(6, 15, 34, 0.7);
+    /* border-radius: 15px; углы скруглить */
     padding: 30px;
     transition: all 0.3s ease;
     height: 250px; /* Базовая высота для первой ячейки */
@@ -542,7 +554,7 @@ header {
 .about-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(6, 15, 34, 0.8); 
 }
 
 .about-card h4 {
@@ -658,6 +670,37 @@ header {
     max-height: 200px;
     padding-bottom: 20px;
 }
+.faq .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    text-align: left; /* Переопределяем центрирование */
+}
+
+.faq .section-header h3 {
+    text-align: left;
+    line-height: 0.6; /* Уменьшаем расстояние между строками */
+}
+
+.faq .section-header .staircase {
+    display: block;
+    margin-left: 80px;
+}
+
+.faq .section-header .staircase:first-child {
+    margin-left: 0;
+}
+
+.faq .section-header .staircase:last-child {
+    margin-left: 220px; /* Сдвигаем "вопросы" на 160px (80px + 80px) */
+}
+
+.faq .section-header p {
+    text-align: left; /* Выравниваем по левому краю */
+    max-width: 320px;
+    color: var(--text-color); /* Делаем текст белым (var(--text-color) = #ffffff) */
+    margin-top: 10px; /* Сдвигаем текст вниз, чтобы он был на уровне "на частые" */
+}
 
 /* Booking Section */
 .booking {
@@ -674,6 +717,7 @@ header {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    align-items: center; /* Центрируем содержимое формы */
 }
 
 .form-row {
@@ -684,6 +728,14 @@ header {
 
 .form-group {
     flex: 1;
+}
+
+.form-step {
+    display: none;
+}
+
+.form-step.active {
+    display: block;
 }
 
 .booking-form input {
@@ -708,9 +760,11 @@ header {
 
 .booking-form button {
     width: 200px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
+    padding: 16px 24px;
+    margin: 0 auto;
+    display: inline-flex; /* Исправляем на inline-flex */
+    justify-content: center; /* Убедимся, что текст центрируется */
+    align-items: center;
 }
 
 /* Footer */
@@ -735,7 +789,7 @@ header {
 
 .footer-info {
     flex: 1;
-    min-width: 220px;
+    min-width: 180px;
     padding-right: 20px;
     margin-bottom: 20px;
 }
@@ -743,11 +797,14 @@ header {
 .footer-logo h3 {
     font-size: 1.8rem;
     color: var(--primary-color);
-    margin-bottom: 0;
+    margin-bottom: -10px;
+    font-family: 'Nico Moji', sans-serif; 
 }
 
 .footer-logo p {
     font-size: 0.8rem;
+    font-family: 'Russo One', sans-serif;
+    margin-bottom: 10px;
 }
 
 .footer-logo span {
@@ -785,6 +842,10 @@ header {
     min-width: 260px;
     margin-bottom: 20px;
     margin-right: 20px;
+}
+
+.footer-contact {
+    margin-left: 30px;
 }
 
 .footer-nav h4, 
@@ -956,14 +1017,18 @@ header {
     .logo {
         text-align: center;
     }
+
+    .navbar {
+        margin-left: -30px;
+    }
     
     .navbar ul {
-        flex-wrap: wrap;
-        justify-content: center;
+        display: flex;
+        gap: 10px;
     }
     
     .navbar ul li {
-        margin: 5px 10px;
+        margin: 0;
     }
     
     .hero-text h2 {
@@ -1033,36 +1098,6 @@ header {
         opacity: 1;
         transform: translateY(0);
     }
-}
-
-/* Corner decorations for cards */
-.about-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 30px;
-    height: 30px;
-    border-top: 2px solid var(--primary-color);
-    border-right: 2px solid var(--primary-color);
-    opacity: 0.7;
-}
-
-.about-card::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 30px;
-    height: 30px;
-    border-bottom: 2px solid var(--primary-color);
-    border-left: 2px solid var(--primary-color);
-    opacity: 0.7;
-}
-
-/* Make about cards have position relative for the corner decorations */
-.about-card {
-    position: relative;
 }
 
 
