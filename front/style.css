@@ -375,6 +375,32 @@ header {
     z-index: -1;
 }
 
+.games::after {
+    content: '';
+    position: absolute;
+    top: 40%;
+    left: 60%;
+    width: 40%;
+    height: 70%;
+    background: url('img/monkey.png') no-repeat right center;
+    background-size: contain;
+    opacity: 0.5;
+    z-index: 0;
+}
+
+.games .container::before {
+    content: '';
+    position: absolute;
+    bottom: 25%;
+    left: 0;
+    width: 40%;
+    height: 70%;
+    background: url('img/tracer.png') no-repeat left center;
+    background-size: contain;
+    opacity: 0.6;
+    z-index: 0;
+}
+
 .games-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
