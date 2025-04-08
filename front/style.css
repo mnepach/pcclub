@@ -397,7 +397,6 @@ header {
     height: 70%;
     background: url('img/tracer.png') no-repeat left center;
     background-size: contain;
-    opacity: 0.6;
     z-index: 0;
 }
 
@@ -567,15 +566,15 @@ header {
 
 /* Увеличиваем высоту для каждой следующей ячейки */
 .about-card:nth-child(2) {
-    height: 350px; /* +50px */
+    height: 350px; 
 }
 
 .about-card:nth-child(3) {
-    height: 450px; /* +100px */
+    height: 450px; 
 }
 
 .about-card:nth-child(4) {
-    height: 550px; /* +150px */
+    height: 550px; 
 }
 
 .about-card:hover {
@@ -612,6 +611,13 @@ header {
     display: block; /* Для центрирования */
     margin: auto; /* Центрируем по горизонтали */
     object-fit: contain; /* Сохраняем пропорции изображения */
+}
+
+
+/* Make sure the about-card has proper positioning for absolute elements */
+.about-card {
+    position: relative;
+    overflow: hidden;
 }
 
 .food-image {
