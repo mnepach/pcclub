@@ -505,6 +505,7 @@ header {
     background: linear-gradient(to bottom, #3D74DA, var(--dark-color));
     position: relative;
     z-index: 0;
+    min-height: calc(100vw * 9 / 16); /* Пропорции 16:9 */
 }
 
 .about::before {
@@ -512,11 +513,11 @@ header {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%; /* От левого края до правого */
-    height: 50%; /* Верхняя половина секции */
-    background: url('img/cloudss.gif') no-repeat center top; /* GIF как фон */
-    background-size: cover; /* Растягиваем, чтобы заполнить область */
-    z-index: -2; /* Под всеми слоями */
+    width: 100%;
+    height: 100%; /* Занимает всю высоту секции */
+    background: url('img/cloudss.gif') no-repeat top left;
+    background-size: 100% auto;
+    z-index: -2;
 }
 
 .about-grid {

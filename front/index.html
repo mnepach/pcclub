@@ -239,9 +239,9 @@
 <section class="booking" id="booking">
     <div class="container">
         <div class="booking-section">
-            <div class="section-header">
-                <h3>Регистрация и бронирование</h3>
-                <p>Зарегистрируйтесь в системе, чтобы забронировать игровое время</p>
+            <div class="section-header" id="booking-header">
+                <h3 id="header-title">Регистрация и бронирование</h3>
+                <p id="header-subtitle">Зарегистрируйтесь в системе, чтобы забронировать игровое время</p>
             </div>
             
             <!-- Registration Form -->
@@ -269,9 +269,6 @@
             
             <!-- Booking Form (appears after registration) -->
             <div id="user-booking-form" class="booking-form">
-                <div class="user-greeting">
-                    <h4>Здравствуйте, <span id="greeting-name">Пользователь</span>!</h4>
-                </div>
                 <form id="booking-form">
                     <div class="form-row">
                         <div class="form-group">
@@ -413,22 +410,13 @@ document.getElementById('register-form').addEventListener('submit', function(e) 
     // Получаем имя пользователя
     const userName = document.getElementById('user-name').value;
     
-    // Устанавливаем имя в приветствие
-    document.getElementById('greeting-name').textContent = userName;
+    // Обновляем заголовок и подзаголовок
+    document.getElementById('header-title').textContent = `Здравствуйте, ${userName}!`;
+    document.getElementById('header-subtitle').textContent = 'Выберите время для бронирования';
     
     // Переключаем формы
     document.getElementById('registration-form').classList.remove('active');
     document.getElementById('user-booking-form').classList.add('active');
-});
-
-// Обработка выхода
-document.getElementById('logout-button').addEventListener('click', function() {
-    // Очищаем форму регистрации
-    document.getElementById('register-form').reset();
-    
-    // Переключаем формы обратно
-    document.getElementById('user-booking-form').classList.remove('active');
-    document.getElementById('registration-form').classList.add('active');
 });
 
 // Обработка бронирования
