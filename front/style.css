@@ -238,14 +238,11 @@ header {
     width: 100%;
     flex-grow: 1;
     padding-top: 80px; /* Add padding to position text higher */
-    position: relative; /* Добавляем для абсолютного позиционирования кнопок */
 }
 
 .hero-text {
     flex: 1;
     padding-right: 2rem;
-    position: relative; /* Для абсолютного позиционирования кнопок */
-    height: 100%; /* Занимаем всю высоту родителя */
 }
 
 .hero-text h2 { 
@@ -352,9 +349,7 @@ header {
 .hero-buttons {
     display: flex;
     gap: 50px;
-    position: absolute; /* Делаем абсолютным позиционирование */
-    bottom: 0; /* Прижимаем к нижнему краю секции */
-    left: 0; /* Прижимаем к левому краю секции */
+    margin-top: 70px; /* для увеличение отступа свеху для кнопок */ 
 }
 
 .hero-buttons .btn {
@@ -520,7 +515,7 @@ header {
     width: 100%; /* От левого края до правого */
     height: 50%; /* Верхняя половина секции */
     background: url('img/cloudss.gif') no-repeat center top; /* GIF как фон */
-    background-size: 100% 100%; /* Изменяем для предотвращения обрезки */
+    background-size: cover; /* Растягиваем, чтобы заполнить область */
     z-index: -2; /* Под всеми слоями */
 }
 
@@ -735,17 +730,11 @@ header {
     flex: 1;
 }
 
-/* Для системы регистрации и бронирования */
-.login-step,
-.verification-step,
-.booking-step {
+.form-step {
     display: none;
-    width: 100%;
 }
 
-.login-step.active,
-.verification-step.active,
-.booking-step.active {
+.form-step.active {
     display: block;
 }
 
@@ -770,14 +759,12 @@ header {
 }
 
 .booking-form button {
-    width: 250px; /* Увеличиваем ширину кнопки */
-    padding: 20px 30px; /* Увеличиваем отступы */
-    margin: 10px auto;
-    display: block;
-    justify-content: center;
+    width: 200px;
+    padding: 16px 24px;
+    margin: 0 auto;
+    display: inline-flex; /* Исправляем на inline-flex */
+    justify-content: center; /* Убедимся, что текст центрируется */
     align-items: center;
-    border: none; /* Убираем ободок */
-    font-size: 1.1rem; /* Увеличиваем размер шрифта */
 }
 
 /* Footer */
@@ -798,12 +785,10 @@ header {
     justify-content: space-between;
     margin-bottom: 30px;
     flex-wrap: wrap;
-    position: relative; /* Для позиционирования внутренних элементов */
 }
 
 .footer-info {
-    flex: 1;
-    min-width: 180px;
+    min-width: 100px;
     padding-right: 20px;
     margin-bottom: 20px;
 }
@@ -855,13 +840,11 @@ header {
     flex-wrap: wrap;
     min-width: 260px;
     margin-bottom: 20px;
-    position: absolute; /* Абсолютное позиционирование */
-    left: 30%; /* Смещаем влево к центру */
-    transform: translateX(-50%); /* Центрируем блок */
+    margin-right: 20px;
 }
 
 .footer-contact {
-    margin-left: 0; /* Убираем левый отступ */
+    margin-left: 30px;
 }
 
 .footer-nav h4, 
@@ -903,7 +886,12 @@ header {
     padding: 25px;
     border-radius: 10px;
     margin-bottom: 20px;
-    margin-left: auto; /* Прижимаем к правому краю */
+}
+
+.admin-login h4 {
+    font-size: 1rem;
+    margin-bottom: 15px;
+    text-align: center;
 }
 
 .admin-form {
@@ -957,41 +945,6 @@ header {
     font-size: 0.8rem;
 }
 
-/* Стили для системы регистрации */
-.verification-step {
-    text-align: center;
-}
-
-.verification-code {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin: 20px 0;
-}
-
-.verification-code input {
-    width: 50px;
-    height: 50px;
-    text-align: center;
-    font-size: 1.5rem;
-    border-radius: 10px;
-}
-
-.booking-options {
-    margin-top: 20px;
-}
-
-.booking-options select {
-    width: 100%;
-    padding: 15px;
-    border-radius: 50px;
-    border: none;
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--text-color);
-    font-size: 1rem;
-    margin-bottom: 15px;
-}
-
 /* Responsive Styles */
 @media (max-width: 992px) {
     .hero-content {
@@ -1006,7 +959,6 @@ header {
     .hero-text {
         padding-right: 0;
         text-align: center;
-        height: auto; /* Сбрасываем высоту для мобильных */
     }
     
     .features {
@@ -1018,9 +970,7 @@ header {
     }
     
     .hero-buttons {
-        position: static; /* Возвращаем обычное позиционирование на мобильных */
         justify-content: center;
-        margin-top: 30px;
     }
     
     .games-grid {
@@ -1028,7 +978,7 @@ header {
     }
     
     .about-grid {
-        flex-direction: column; /* Меняем на колонку для мобильных */
+        grid-template-columns: 1fr;
     }
     
     .footer-content {
@@ -1036,16 +986,11 @@ header {
     }
     
     .footer-info, 
+    .footer-links,
     .admin-login {
         width: 100%;
         padding-right: 0;
         margin-bottom: 30px;
-    }
-    
-    .footer-links {
-        position: static; /* Убираем абсолютное позиционирование на мобильных */
-        transform: none;
-        width: 100%;
     }
     
     /* Adjust feature bubbles on smaller screens */
@@ -1053,3 +998,200 @@ header {
         position: static;
         margin: 10px auto;
         max-width: 80%;
+    }
+    
+    .feature-bubble:after {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    
+    header {
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px;
+    }
+    
+    .logo {
+        text-align: center;
+    }
+
+    .navbar {
+        margin-left: -30px;
+    }
+    
+    .navbar ul {
+        display: flex;
+        gap: 10px;
+    }
+    
+    .navbar ul li {
+        margin: 0;
+    }
+    
+    .hero-text h2 {
+        font-size: 2rem;
+    }
+    
+    .hero-text h2 span {
+        font-size: 2.3rem;
+    }
+    
+    .hero-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .hero-buttons .btn {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .section-header h3 {
+        font-size: 2rem;
+    }
+    
+    .footer-links {
+        flex-direction: column;
+        gap: 30px;
+    }
+    
+    .form-row {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
+
+@media (max-width: 576px) {
+    .tab {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+    }
+    
+    .faq-question h4 {
+        font-size: 1rem;
+    }
+    
+    .pricing-content {
+        padding: 20px;
+    }
+    
+    .booking-form input,
+    .booking-form button {
+        padding: 12px;
+    }
+    
+    .footer-map {
+        height: 200px;
+    }
+}
+
+/* Animation Styles */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* Add decorative dividers for pricing tabs */
+.pricing-tabs .tab:not(:last-child)::after {
+    content: '•';
+    position: absolute;
+    right: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray-color);
+}
+
+.pricing-tabs .tab {
+    position: relative;
+}
+
+/* Add subtle glowing dots to the hero background */
+@keyframes glowing {
+    0% { opacity: 0.3; }
+    50% { opacity: 0.7; }
+    100% { opacity: 0.3; }
+}
+
+.hero::after {
+    content: '';
+    background: radial-gradient(circle, var(--primary-color) 1px, transparent 1px) 0 0/100px 100px;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    opacity: 0.05;
+    animation: glowing 4s infinite;
+}
+
+.hero-text, .hero-image, .section-header, .game-card, .about-card, .faq-item, .feature-bubble {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+.hero-text {
+    animation-delay: 0.2s;
+}
+
+.hero-image {
+    animation-delay: 0.4s;
+}
+
+.feature-bubble.top-right {
+    animation-delay: 0.6s;
+}
+
+.feature-bubble.bottom-left {
+    animation-delay: 0.8s;
+}
+
+.feature-bubble.top-left {
+    animation-delay: 1s;
+}
+
+.section-header {
+    animation-delay: 0.1s;
+}
+
+.game-card:nth-child(1), .about-card:nth-child(1) {
+    animation-delay: 0.2s;
+}
+
+.game-card:nth-child(2), .about-card:nth-child(2) {
+    animation-delay: 0.3s;
+}
+
+.game-card:nth-child(3), .about-card:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+.game-card:nth-child(4), .about-card:nth-child(4) {
+    animation-delay: 0.5s;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--dark-color);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-color);
+}
