@@ -235,39 +235,61 @@
         </div>
     </section>
 
-    <!-- Combined Booking -->
-    <section class="booking" id="booking">
-        <div class="container">
-            <div class="booking-section">
-                <div class="section-header">
-                    <h3>Оставь заявку на бронь мест</h3>
-                    <p>Вы можете оставить заявку на бронь, в течении 30 минут мы перезвоним Вам и договоримся о дате</p>
-                </div>
-                <div class="booking-form">
-                    <form>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <input type="text" placeholder="Ваше имя" required>
-                            </div>
-                            <div class="form-group">
-                                <input type="tel" placeholder="Номер телефона" required>
-                            </div>
+<!-- Booking Section -->
+<section class="booking" id="booking">
+    <div class="container">
+        <div class="booking-section">
+            <div class="section-header">
+                <h3>Регистрация и бронирование</h3>
+                <p>Зарегистрируйтесь в системе, чтобы забронировать игровое время</p>
+            </div>
+            
+            <!-- Registration Form -->
+            <div id="registration-form" class="booking-form active">
+                <form id="register-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" id="user-name" placeholder="Ваше имя" required>
                         </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <input type="date" required>
-                            </div>
-                            <div class="form-group">
-                                <input type="time" required>
-                            </div>
+                        <div class="form-group">
+                            <input type="email" id="user-email" placeholder="Электронная почта" required>
                         </div>
-                        <button type="submit" class="btn primary">Зарегистрироваться</button>
-                    </form>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="password" id="user-password" placeholder="Пароль" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" id="confirm-password" placeholder="Подтвердите пароль" required>
+                        </div>
+                    </div>
+                    <button type="submit" id="register-button" class="btn primary">Зарегистрироваться</button>
+                </form>
+            </div>
+            
+            <!-- Booking Form (appears after registration) -->
+            <div id="user-booking-form" class="booking-form">
+                <div class="user-greeting">
+                    <h4>Здравствуйте, <span id="greeting-name">Пользователь</span>!</h4>
                 </div>
+                <form id="booking-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="date" id="booking-date" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="time" id="booking-time" required>
+                        </div>
+                    </div>
+                    <div class="booking-buttons">
+                        <button type="submit" id="book-button" class="btn primary">Забронировать</button>
+                        <button type="button" id="logout-button" class="btn secondary">Выйти</button>
+                    </div>
+                </form>
             </div>
         </div>
-        
-    </section>
+    </div>
+</section>
 
 
     <!-- Footer -->
@@ -375,11 +397,50 @@ document.getElementById('admin-email-submit').addEventListener('click', function
     document.getElementById('password-form').classList.add('active');
 });
 
-// Booking form step toggle
-document.getElementById('booking-submit').addEventListener('click', function(e) {
+// Обработка регистрации и бронирования
+document.getElementById('register-form').addEventListener('submit', function(e) {
     e.preventDefault();
-    document.getElementById('booking-step-1').classList.remove('active');
-    document.getElementById('booking-step-2').classList.add('active');
+    
+    // Проверка совпадения паролей
+    const password = document.getElementById('user-password').value;
+    const confirmPassword = document.getElementById('confirm-password').value;
+    
+    if (password !== confirmPassword) {
+        alert('Пароли не совпадают!');
+        return;
+    }
+    
+    // Получаем имя пользователя
+    const userName = document.getElementById('user-name').value;
+    
+    // Устанавливаем имя в приветствие
+    document.getElementById('greeting-name').textContent = userName;
+    
+    // Переключаем формы
+    document.getElementById('registration-form').classList.remove('active');
+    document.getElementById('user-booking-form').classList.add('active');
+});
+
+// Обработка выхода
+document.getElementById('logout-button').addEventListener('click', function() {
+    // Очищаем форму регистрации
+    document.getElementById('register-form').reset();
+    
+    // Переключаем формы обратно
+    document.getElementById('user-booking-form').classList.remove('active');
+    document.getElementById('registration-form').classList.add('active');
+});
+
+// Обработка бронирования
+document.getElementById('booking-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Получаем дату и время
+    const date = document.getElementById('booking-date').value;
+    const time = document.getElementById('booking-time').value;
+    
+    // Здесь должен быть код для отправки данных на сервер
+    alert(`Бронирование на ${date} в ${time} успешно создано!`);
 });
     </script>
 </body>

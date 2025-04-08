@@ -713,17 +713,50 @@ header {
     margin: 0 auto;
 }
 
-.booking-form form {
+/* Обновленные стили для секции бронирования */
+.booking-form {
+    display: none;
+}
+
+.booking-form.active {
+    display: block;
+}
+
+.user-greeting {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.user-greeting h4 {
+    font-size: 1.5rem;
+    color: var(--text-color);
+}
+
+.booking-buttons {
     display: flex;
-    flex-direction: column;
-    gap: 20px;
-    align-items: center; /* Центрируем содержимое формы */
+    justify-content: center;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.booking-buttons .btn {
+    width: 170px;
+}
+
+/* Стили для валидации формы */
+input:invalid {
+    border: 2px solid rgba(255, 0, 0, 0.5);
+}
+
+input:focus:invalid {
+    outline: none;
 }
 
 .form-row {
     display: flex;
-    gap: 20px;
+    gap: 30px;
     width: 100%;
+    margin-top: 20px;
 }
 
 .form-group {
@@ -759,12 +792,11 @@ header {
 }
 
 .booking-form button {
-    width: 200px;
+    width: 250px; /* Увеличиваем ширину для лучшего вида */
     padding: 16px 24px;
-    margin: 0 auto;
-    display: inline-flex; /* Исправляем на inline-flex */
-    justify-content: center; /* Убедимся, что текст центрируется */
-    align-items: center;
+    margin: 30px auto 0; /* Добавляем отступ сверху и центрируем */
+    display: block; /* Меняем на block для полной центровки */
+    text-align: center; /* Центрируем текст внутри кнопки */
 }
 
 /* Footer */
