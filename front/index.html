@@ -428,6 +428,53 @@ document.getElementById('booking-form').addEventListener('submit', function(e) {
     // Здесь должен быть код для отправки данных на сервер
     alert(`Бронирование на ${date} в ${time} успешно создано!`);
 });
+// Add event listener for logout button
+document.getElementById('logout-button').addEventListener('click', function(e) {
+    e.preventDefault();
+    
+    // Reset the header back to registration view
+    document.getElementById('header-title').textContent = 'Регистрация и бронирование';
+    document.getElementById('header-subtitle').textContent = 'Зарегистрируйтесь в системе, чтобы забронировать игровое время';
+    
+    // Switch forms back to registration
+    document.getElementById('user-booking-form').classList.remove('active');
+    document.getElementById('registration-form').classList.add('active');
+    
+    // Clear form fields
+    document.getElementById('user-name').value = '';
+    document.getElementById('user-email').value = '';
+    document.getElementById('user-password').value = '';
+    document.getElementById('confirm-password').value = '';
+});
+// Create floating elements for booking section background
+function createFloatingElements() {
+    const bookingSection = document.querySelector('.booking');
+    
+    for (let i = 0; i < 8; i++) {
+        const element = document.createElement('div');
+        element.classList.add('floating-element');
+        
+        // Random size between 50px and 150px
+        const size = Math.floor(Math.random() * 100) + 50;
+        element.style.width = `${size}px`;
+        element.style.height = `${size}px`;
+        
+        // Random position
+        element.style.left = `${Math.random() * 100}%`;
+        element.style.top = `${Math.random() * 100}%`;
+        
+        // Random animation delay
+        element.style.animationDelay = `${Math.random() * 5}s`;
+        
+        // Random opacity
+        element.style.opacity = Math.random() * 0.3;
+        
+        bookingSection.appendChild(element);
+    }
+}
+
+// Call the function when the page loads
+window.addEventListener('load', createFloatingElements);
     </script>
 </body>
 </html>

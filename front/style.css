@@ -755,6 +755,49 @@ header {
     display: block;
 }
 
+
+/* Animated background elements for registration */
+.booking {
+    overflow: hidden; /* Ensure elements don't cause horizontal scrolling */
+}
+
+.booking .container {
+    position: relative;
+    z-index: 2;
+}
+
+/* Floating particles */
+.booking::before,
+.booking::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* Add floating elements */
+@keyframes float {
+    0% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(5deg); }
+    100% { transform: translateY(0) rotate(0deg); }
+}
+
+.booking .floating-element {
+    position: absolute;
+    background: rgba(145, 184, 209, 0.529);
+    border-radius: 50%;
+    filter: blur(8px);
+    pointer-events: none;
+    z-index: -1;
+    animation: float 8s infinite ease-in-out;
+}
+
+/* Add this JS to create floating elements dynamically */
+
 .user-greeting {
     text-align: center;
     margin-bottom: 20px;
