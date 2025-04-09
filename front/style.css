@@ -613,6 +613,110 @@ header {
     object-fit: contain; /* Сохраняем пропорции изображения */
 }
 
+/* Mario Game Elements Styling */
+.about-grid {
+    position: relative; /* Make sure the grid has relative positioning */
+}
+
+.mario-element {
+    position: absolute;
+    z-index: 1;
+    pointer-events: none; /* This ensures clicks pass through these decorative elements */
+}
+
+/* Specific positioning for each element */
+.mario {
+    top: 230px;
+    left: 30px;
+    width: 70px;
+    height: auto;
+      transform: scaleX(-1);
+}
+
+.garden-1 {
+    top: 259px;
+    left: 120px;
+    width: 70px;
+    height: auto;
+}
+
+.coin-1 {
+    top: 220px;
+    left: 140px;
+    width: 30px;
+    height: auto;
+}
+
+.coin-2 {
+    top: 220px;
+    left: 180px;
+    width: 30px;
+    height: auto;
+}
+
+.coin-3 {
+    top: -70px;
+    left: 260px;
+    width: 30px;
+    height: auto;
+}
+
+.block {
+    top: 100px;
+    left: 370px;
+    width: 50px;
+    height: auto;
+}
+
+.flower {
+    top: 152px;
+    left: 500px;
+    width: 60px;
+    height: auto;
+}
+
+.garden-2 {
+    top: 57px;
+    left: 650px;
+    width: 70px;
+    height: auto;
+}
+
+.coin-4 {
+    top: 20px;
+    left: 670px;
+    width: 30px;
+    height: auto;
+}
+
+.coin-5 {
+    top: -10px;
+    left: 670px;
+    width: 30px;
+    height: auto;
+}
+
+.mushroom {
+    top: 28px;
+    left: 770px;
+    width: 80px;
+    height: 80px;
+}
+
+.pipe {
+    top: -66px;
+    right: 45px;
+    width: 100px;
+    height: auto;
+}
+
+.garden-3 {
+    top: -43px;
+    right: 90px;
+    width: 70px;
+    height: auto;
+}
+
 
 /* Make sure the about-card has proper positioning for absolute elements */
 .about-card {
