@@ -294,7 +294,7 @@
                             row.innerHTML = `
                                 <td>${booking.id}</td>
                                 <td>${user.name}</td>
-                                <td>${user.phoneNumber}</td>
+                                <td>${user.email}</td>
                                 <td>${booking.workStation.number}</td>
                                 <td>${formatDate(booking.startTime)}</td>
                                 <td>${formatDate(booking.endTime)}</td>
@@ -350,7 +350,7 @@
                     row.innerHTML = `
                         <td>${user.id}</td>
                         <td>${user.name}</td>
-                        <td>${user.phoneNumber}</td>
+                        <td>${user.email}</td>
                         <td>${user.bookedSeats}</td>
                         <td>
                             <button class="action-btn delete-btn" data-id="${user.id}">Удалить</button>
