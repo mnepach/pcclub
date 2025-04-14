@@ -638,7 +638,7 @@ document.getElementById('admin-login-submit').addEventListener('click', function
 
     const loginData = {
         email: document.getElementById('admin-email').value,
-        uniqueCode: document.getElementById('admin-password').value // Note: using password field for unique code
+        uniqueCode: document.getElementById('admin-password').value // Using password field for unique code
     };
 
     apiCall('/api/auth/login', 'POST', loginData)
@@ -646,8 +646,8 @@ document.getElementById('admin-login-submit').addEventListener('click', function
             console.log('Admin login successful', response);
             storeToken(response.token);
 
-            // Redirect to admin dashboard
-            window.location.href = 'admin.html';
+            // Redirect to admin dashboard with a parameter
+            window.location.href = 'admin.html?adminLogin=true';
         })
         .catch(error => {
             console.error('Admin login failed', error);

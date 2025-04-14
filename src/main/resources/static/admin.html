@@ -443,24 +443,6 @@
             });
     });
 
-    // Check if admin is already logged in
-    window.addEventListener('DOMContentLoaded', function() {
-        const token = getToken();
-        if (token) {
-            // Verify token validity
-            apiCall('/api/bookings', 'GET', null, token)
-                .then(() => {
-                    document.getElementById('admin-login').style.display = 'none';
-                    document.getElementById('admin-dashboard').style.display = 'block';
-                    loadBookings();
-                })
-                .catch(() => {
-                    // If token is invalid, clear it
-                    clearToken();
-                });
-        }
-    });
-
     // Tab switching
     document.getElementById('bookings-tab-btn').addEventListener('click', function() {
         switchTab('bookings-tab');
@@ -483,6 +465,19 @@
         document.getElementById('admin-dashboard').style.display = 'none';
         document.getElementById('admin-login').style.display = 'block';
     });
+
+    // Check if we've been redirected from main page with admin login
+    const urlParams = new URLSearchParams(window.location.search);
+    const adminLogin = urlParams.get('adminLogin');
+    
+    if (adminLogin === 'true') {
+        const token = getToken();
+        if (token) {
+            document.getElementById('admin-login').style.display = 'none';
+            document.getElementById('admin-dashboard').style.display = 'block';
+            loadBookings();
+        }
+    }
 </script>
 </body>
 </html>
