@@ -256,8 +256,7 @@
                 <p id="header-subtitle">Зарегистрируйтесь в системе, чтобы забронировать игровое время</p>
             </div>
 
-
-            <!-- Add this after your registration form -->
+            <!-- Login Form -->
             <div id="login-form" class="booking-form">
                 <form id="user-login-form">
                     <div class="form-row">
@@ -315,7 +314,6 @@
         </div>
     </div>
 </section>
-
 
 <!-- Footer -->
 <section class="footer-section" id="contacts">
@@ -387,235 +385,233 @@
                     </div>
                 </div>
             </div>
-        <div class="copyright">
-            <p>Copyright © 2025 - 2025 GameOn - All rights reserved</p>
+            <div class="copyright">
+                <p>Copyright © 2025 - 2025 GameOn - All rights reserved</p>
+            </div>
         </div>
     </div>
 </section>
 
-
-<!-- Add JavaScript for admin login toggle -->
 <script>
     // Simple tabs functionality
-document.querySelectorAll('.tab').forEach(tab => {
-tab.addEventListener('click', () => {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-    document.getElementById(`${tab.dataset.tab}-content`).classList.add('active');
-});
-});
-
-// FAQ toggle
-document.querySelectorAll('.faq-question').forEach(question => {
-question.addEventListener('click', () => {
-    const item = question.parentElement;
-    item.classList.toggle('active');
-});
-});
-
-// Admin login form toggle
-document.getElementById('admin-email-submit').addEventListener('click', function(e) {
-    e.preventDefault();
-    const email = document.getElementById('admin-email').value;
-    if (!email) {
-        alert('Пожалуйста, введите email');
-        return;
-    }
-    console.log('Переход к вводу уникального кода для:', email);
-    document.getElementById('email-form').classList.remove('active');
-    document.getElementById('password-form').classList.add('active');
-});
-
-document.getElementById('register-form').addEventListener('submit', function(e) {
-e.preventDefault();
-
-// Проверка совпадения паролей
-const password = document.getElementById('user-password').value;
-const confirmPassword = document.getElementById('confirm-password').value;
-
-if (password !== confirmPassword) {
-    alert('Пароли не совпадают!');
-    return;
-}
-
-const userData = {
-    name: document.getElementById('user-name').value,
-    email: document.getElementById('user-email').value, 
-    password: password,
-    bookedSeats: 1 // Default value
-};
-
-apiCall('/api/auth/register', 'POST', userData)
-    .then(response => {
-        console.log('Registration successful', response);
-        storeToken(response.token);
-
-        // Получаем имя пользователя
-        const userName = userData.name;
-
-        // Обновляем заголовок и подзаголовок
-        document.getElementById('header-title').textContent = `Здравствуйте, ${userName}!`;
-        document.getElementById('header-subtitle').textContent = 'Выберите время для бронирования';
-
-        // Переключаем формы
-        document.getElementById('registration-form').classList.remove('active');
-        document.getElementById('user-booking-form').classList.add('active');
-    })
-    .catch(error => {
-        console.error('Registration failed', error);
-        alert('Ошибка регистрации: ' + (error.message || 'Проверьте введенные данные'));
+    document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(`${tab.dataset.tab}-content`).classList.add('active');
+        });
     });
 
-// Получаем имя пользователя
-const userName = document.getElementById('user-name').value;
+    // FAQ toggle
+    document.querySelectorAll('.faq-question').forEach(question => {
+        question.addEventListener('click', () => {
+            const item = question.parentElement;
+            item.classList.toggle('active');
+        });
+    });
 
-// Обновляем заголовок и подзаголовок
-document.getElementById('header-title').textContent = `Здравствуйте, ${userName}!`;
-document.getElementById('header-subtitle').textContent = 'Выберите время для бронирования';
+    // Admin login form toggle
+    document.getElementById('admin-email-submit').addEventListener('click', function(e) {
+        e.preventDefault();
+        const email = document.getElementById('admin-email').value;
+        if (!email) {
+            alert('Пожалуйста, введите email');
+            return;
+        }
+        console.log('Переход к вводу уникального кода для:', email);
+        document.getElementById('email-form').classList.remove('active');
+        document.getElementById('password-form').classList.add('active');
+    });
 
-// Переключаем формы
-document.getElementById('registration-form').classList.remove('active');
-document.getElementById('user-booking-form').classList.add('active');
-});
-
-document.getElementById('booking-form').addEventListener('submit', function(e) {
+    // Registration form handler
+    document.getElementById('register-form').addEventListener('submit', function(e) {
     e.preventDefault();
 
-    // Get token to check if user is logged in
-    const token = getToken();
-    if (!token) {
-        alert('Пожалуйста, войдите в систему');
+    // Проверка совпадения паролей
+    const password = document.getElementById('user-password').value;
+    const confirmPassword = document.getElementById('confirm-password').value;
+
+    if (password !== confirmPassword) {
+        alert('Пароли не совпадают!');
         return;
     }
 
-    // Get the first available workstation (you might want to let users choose)
-    apiCall('/api/workstations', 'GET')
-        .then(workstations => {
-            // Find first available workstation
-            const availableStation = workstations.find(station => station.available);
-            if (!availableStation) {
-                throw new Error('Нет доступных рабочих мест');
-            }
+    const userData = {
+        name: document.getElementById('user-name').value,
+        email: document.getElementById('user-email').value,
+        password: password,
+        bookedSeats: 1
+    };
 
-            const bookingData = {
-                workStationId: availableStation.id,
-                startTime: formatDateTime(document.getElementById('booking-date').value, document.getElementById('booking-time').value),
-                // Set end time 2 hours after start time
-                endTime: formatDateTime(document.getElementById('booking-date').value, document.getElementById('booking-time').value, 2),
-                status: "pending"
-            };
+    console.log('Отправка данных на регистрацию:', userData);
 
-            return apiCall('/api/bookings', 'POST', bookingData, token);
-        })
+    apiCall('/api/auth/register', 'POST', userData)
         .then(response => {
-            console.log('Booking successful', response);
-            alert(`Бронирование успешно создано! Стоимость: ${response.totalPrice} р.`);
+            console.log('Registration successful', response);
+            storeToken(response.token);
+
+            // Получаем имя пользователя
+            const userName = userData.name;
+
+            // Обновляем заголовок и подзаголовок
+            document.getElementById('header-title').textContent = `Здравствуйте, ${userName}!`;
+            document.getElementById('header-subtitle').textContent = 'Выберите время для бронирования';
+
+            // Переключаем формы
+            document.getElementById('registration-form').classList.remove('active');
+            document.getElementById('user-booking-form').classList.add('active');
         })
         .catch(error => {
-            console.error('Booking failed', error);
-            alert('Ошибка бронирования: ' + (error.message || 'Проверьте введенные данные'));
+            console.error('Registration failed:', error.message);
+            alert('Ошибка регистрации: ' + error.message);
         });
 });
 
-// Helper function to format date and time for API
-function formatDateTime(date, time, addHours = 0) {
-    const dt = new Date(`${date}T${time}`);
-    if (addHours) {
-        dt.setHours(dt.getHours() + addHours);
-    }
-    return dt.toISOString();
-}
-// Add event listener for logout button
-document.getElementById('logout-button').addEventListener('click', function(e) {
-e.preventDefault();
+    // Booking form handler
+    document.getElementById('booking-form').addEventListener('submit', function(e) {
+        e.preventDefault();
 
-// Reset the header back to registration view
-document.getElementById('header-title').textContent = 'Регистрация и бронирование';
-document.getElementById('header-subtitle').textContent = 'Зарегистрируйтесь в системе, чтобы забронировать игровое время';
+        // Get token to check if user is logged in
+        const token = getToken();
+        console.log('Токен для бронирования:', token);
+        if (!token) {
+            alert('Пожалуйста, войдите в систему');
+            return;
+        }
 
-// Switch forms back to registration
-document.getElementById('user-booking-form').classList.remove('active');
-document.getElementById('registration-form').classList.add('active');
+        // Get the first available workstation
+        apiCall('/api/workstations', 'GET', null, token)
+            .then(workstations => {
+                // Find first available workstation
+                const availableStation = workstations.find(station => station.available);
+                if (!availableStation) {
+                    throw new Error('Нет доступных рабочих мест');
+                }
 
-// Clear form fields
-document.getElementById('user-name').value = '';
-document.getElementById('user-email').value = '';
-document.getElementById('user-password').value = '';
-document.getElementById('confirm-password').value = '';
-});
-// Create floating elements for booking section background
-function createFloatingElements() {
-const bookingSection = document.querySelector('.booking');
+                const bookingData = {
+                    workStationId: availableStation.id,
+                    startTime: formatDateTime(document.getElementById('booking-date').value, document.getElementById('booking-time').value),
+                    endTime: formatDateTime(document.getElementById('booking-date').value, document.getElementById('booking-time').value, 2),
+                    status: "pending"
+                };
 
-for (let i = 0; i < 8; i++) {
-    const element = document.createElement('div');
-    element.classList.add('floating-element');
-
-    // Random size between 50px and 150px
-    const size = Math.floor(Math.random() * 100) + 50;
-    element.style.width = `${size}px`;
-    element.style.height = `${size}px`;
-
-    // Random position
-    element.style.left = `${Math.random() * 100}%`;
-    element.style.top = `${Math.random() * 100}%`;
-
-    // Random animation delay
-    element.style.animationDelay = `${Math.random() * 5}s`;
-
-    // Random opacity
-    element.style.opacity = Math.random() * 0.3;
-
-    bookingSection.appendChild(element);
-}
-}
-
-// Login form handler
-document.getElementById('user-login-form').addEventListener('submit', function(e) {
-e.preventDefault();
-
-const loginData = {
-    email: document.getElementById('login-email').value,
-    password: document.getElementById('login-password').value
-};
-
-apiCall('/api/auth/login', 'POST', loginData)
-    .then(response => {
-        console.log('Login successful', response);
-        storeToken(response.token);
-
-        // Get user details with the token
-        return apiCall('/api/users/' + getUserIdFromToken(response.token), 'GET', null, response.token);
-    })
-    .then(userData => {
-        // Обновляем заголовок и подзаголовок
-        document.getElementById('header-title').textContent = `Здравствуйте, ${userData.name}!`;
-        document.getElementById('header-subtitle').textContent = 'Выберите время для бронирования';
-
-        // Переключаем формы
-        document.getElementById('login-form').classList.remove('active');
-        document.getElementById('user-booking-form').classList.add('active');
-    })
-    .catch(error => {
-        console.error('Login failed', error);
-        alert('Ошибка входа: ' + (error.message || 'Проверьте введенные данные'));
+                console.log('Данные бронирования:', bookingData);
+                return apiCall('/api/bookings', 'POST', bookingData, token);
+            })
+            .then(response => {
+                console.log('Booking successful', response);
+                alert(`Бронирование успешно создано! Стоимость: ${response.totalPrice} р.`);
+            })
+            .catch(error => {
+                console.error('Booking failed', error);
+                alert('Ошибка бронирования: ' + (error.message || 'Проверьте введенные данные'));
+            });
     });
-});
 
-// Function to extract user ID from the JWT token
-function getUserIdFromToken(token) {
-const base64Url = token.split('.')[1];
-const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-}).join(''));
+    // Helper function to format date and time for API
+    function formatDateTime(date, time, addHours = 0) {
+        const dt = new Date(`${date}T${time}`);
+        if (addHours) {
+            dt.setHours(dt.getHours() + addHours);
+        }
+        return dt.toISOString();
+    }
 
-return JSON.parse(jsonPayload).id;
-}
+    // Logout button handler
+    document.getElementById('logout-button').addEventListener('click', function(e) {
+        e.preventDefault();
 
-// API utility functions
-function apiCall(url, method, data, token = null) {
+        // Reset the header back to registration view
+        document.getElementById('header-title').textContent = 'Регистрация и бронирование';
+        document.getElementById('header-subtitle').textContent = 'Зарегистрируйтесь в системе, чтобы забронировать игровое время';
+
+        // Switch forms back to registration
+        document.getElementById('user-booking-form').classList.remove('active');
+        document.getElementById('registration-form').classList.add('active');
+
+        // Clear form fields
+        document.getElementById('user-name').value = '';
+        document.getElementById('user-email').value = '';
+        document.getElementById('user-password').value = '';
+        document.getElementById('confirm-password').value = '';
+
+        // Clear token
+        clearToken();
+    });
+
+    // Create floating elements for booking section background
+    function createFloatingElements() {
+        const bookingSection = document.querySelector('.booking');
+
+        for (let i = 0; i < 8; i++) {
+            const element = document.createElement('div');
+            element.classList.add('floating-element');
+
+            // Random size between 50px and 150px
+            const size = Math.floor(Math.random() * 100) + 50;
+            element.style.width = `${size}px`;
+            element.style.height = `${size}px`;
+
+            // Random position
+            element.style.left = `${Math.random() * 100}%`;
+            element.style.top = `${Math.random() * 100}%`;
+
+            // Random animation delay
+            element.style.animationDelay = `${Math.random() * 5}s`;
+
+            // Random opacity
+            element.style.opacity = Math.random() * 0.3;
+
+            bookingSection.appendChild(element);
+        }
+    }
+
+    // Login form handler
+    document.getElementById('user-login-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const loginData = {
+            email: document.getElementById('login-email').value,
+            password: document.getElementById('login-password').value
+        };
+
+        apiCall('/api/auth/login', 'POST', loginData)
+            .then(response => {
+                console.log('Login successful', response);
+                storeToken(response.token);
+
+                // Get user details with the token
+                return apiCall('/api/users/' + getUserIdFromToken(response.token), 'GET', null, response.token);
+            })
+            .then(userData => {
+                // Обновляем заголовок и подзаголовок
+                document.getElementById('header-title').textContent = `Здравствуйте, ${userData.name}!`;
+                document.getElementById('header-subtitle').textContent = 'Выберите время для бронирования';
+
+                // Переключаем формы
+                document.getElementById('login-form').classList.remove('active');
+                document.getElementById('user-booking-form').classList.add('active');
+            })
+            .catch(error => {
+                console.error('Login failed', error);
+                alert('Ошибка входа: ' + (error.message || 'Проверьте введенные данные'));
+            });
+    });
+
+    // Function to extract user ID from the JWT token
+    function getUserIdFromToken(token) {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+
+        return JSON.parse(jsonPayload).id;
+    }
+
+    // API utility function
+    function apiCall(url, method, data, token = null) {
     return fetch(`http://localhost:8080${url}`, {
         method: method,
         headers: {
@@ -625,11 +621,11 @@ function apiCall(url, method, data, token = null) {
         body: data ? JSON.stringify(data) : null
     })
     .then(response => {
-        console.log('API call:', url, 'Status:', response.status);
+        console.log('API call:', url, 'Status:', response.status, 'StatusText:', response.statusText);
         if (!response.ok) {
-            return response.json().then(err => {
-                console.error('API error response:', err);
-                throw new Error(err.message || 'Ошибка сервера');
+            return response.text().then(text => {
+                console.error('API error response:', text, 'Status:', response.status);
+                throw new Error(text || 'Ошибка сервера');
             });
         }
         return response.json();
@@ -640,80 +636,81 @@ function apiCall(url, method, data, token = null) {
     });
 }
 
-// Update the admin login code in the main page
-document.getElementById('admin-login-submit').addEventListener('click', function(e) {
-    e.preventDefault();
-    const loginData = {
-        email: document.getElementById('admin-email').value,
-        uniqueCode: document.getElementById('admin-unique-code').value
-    };
-    apiCall('/api/auth/login', 'POST', loginData)
-        .then(response => {
-            console.log('Admin login successful', response);
-            storeToken(response.token);
-            window.location.href = 'admin.html?adminLogin=true';
-        })
-        .catch(error => {
-            console.error('Admin login failed', error);
-            alert('Ошибка входа: ' + (error.message || 'Проверьте введенные данные'));
-        });
-});
+    // Store token in session storage
+    function storeToken(token) {
+        console.log('Сохранение токена:', token);
+        sessionStorage.setItem('jwtToken', token);
+    }
 
-// Store token in session storage
-function storeToken(token) {
-    console.log('Сохранение токена:', token);
-    sessionStorage.setItem('jwtToken', token);
-}
+    // Get token from session storage
+    function getToken() {
+        const token = sessionStorage.getItem('jwtToken');
+        console.log('Получение токена:', token);
+        return token;
+    }
 
-// Get token from session storage
-function getToken() {
-return sessionStorage.getItem('jwtToken');
-}
+    // Clear token (for logout)
+    function clearToken() {
+        console.log('Очистка токена');
+        sessionStorage.removeItem('jwtToken');
+    }
 
-// Clear token (for logout)
-function clearToken() {
-sessionStorage.removeItem('jwtToken');
-}
+    // Call the function when the page loads
+    window.addEventListener('load', createFloatingElements);
 
-// Call the function when the page loads
-window.addEventListener('load', createFloatingElements);
+    // Create tabs for registration/login
+    const registerTab = document.createElement('div');
+    registerTab.className = 'tab active';
+    registerTab.dataset.tab = 'register';
+    registerTab.textContent = 'Регистрация';
 
-    // Add this to your existing script in index.html
+    const loginTab = document.createElement('div');
+    loginTab.className = 'tab';
+    loginTab.dataset.tab = 'login';
+    loginTab.textContent = 'Вход';
 
-// Create tabs for registration/login
-const registerTab = document.createElement('div');
-registerTab.className = 'tab active';
-registerTab.dataset.tab = 'register';
-registerTab.textContent = 'Регистрация';
+    const tabsContainer = document.createElement('div');
+    tabsContainer.className = 'pricing-tabs';
+    tabsContainer.appendChild(registerTab);
+    tabsContainer.appendChild(loginTab);
 
-const loginTab = document.createElement('div');
-loginTab.className = 'tab';
-loginTab.dataset.tab = 'login';
-loginTab.textContent = 'Вход';
+    // Insert tabs before registration form
+    const bookingHeader = document.getElementById('booking-header');
+    bookingHeader.after(tabsContainer);
 
-const tabsContainer = document.createElement('div');
-tabsContainer.className = 'pricing-tabs';
-tabsContainer.appendChild(registerTab);
-tabsContainer.appendChild(loginTab);
+    // Handle tab switching
+    registerTab.addEventListener('click', function() {
+        registerTab.classList.add('active');
+        loginTab.classList.remove('active');
+        document.getElementById('registration-form').classList.add('active');
+        document.getElementById('login-form').classList.remove('active');
+    });
 
-// Insert tabs before registration form
-const bookingHeader = document.getElementById('booking-header');
-bookingHeader.after(tabsContainer);
+    loginTab.addEventListener('click', function() {
+        loginTab.classList.add('active');
+        registerTab.classList.remove('active');
+        document.getElementById('login-form').classList.add('active');
+        document.getElementById('registration-form').classList.remove('active');
+    });
 
-// Handle tab switching
-registerTab.addEventListener('click', function() {
-    registerTab.classList.add('active');
-    loginTab.classList.remove('active');
-    document.getElementById('registration-form').classList.add('active');
-    document.getElementById('login-form').classList.remove('active');
-});
-
-loginTab.addEventListener('click', function() {
-    loginTab.classList.add('active');
-    registerTab.classList.remove('active');
-    document.getElementById('login-form').classList.add('active');
-    document.getElementById('registration-form').classList.remove('active');
-});
+    // Admin login handler
+    document.getElementById('admin-login-submit').addEventListener('click', function(e) {
+        e.preventDefault();
+        const loginData = {
+            email: document.getElementById('admin-email').value,
+            uniqueCode: document.getElementById('admin-unique-code').value
+        };
+        apiCall('/api/auth/login', 'POST', loginData)
+            .then(response => {
+                console.log('Admin login successful', response);
+                storeToken(response.token);
+                window.location.href = 'admin.html?adminLogin=true';
+            })
+            .catch(error => {
+                console.error('Admin login failed', error);
+                alert('Ошибка входа: ' + (error.message || 'Проверьте введенные данные'));
+            });
+    });
 </script>
 </body>
 </html>

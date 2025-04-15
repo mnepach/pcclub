@@ -7,6 +7,8 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
@@ -17,6 +19,8 @@ import java.util.function.Function;
 
 @Component
 public class JwtUtil {
+
+    private static final Logger logger = LoggerFactory.getLogger(JwtUtil.class);
 
     @Value("${jwt.secret}")
     private String secret;
@@ -55,10 +59,13 @@ public class JwtUtil {
     }
 
     public String generateToken(String username, String role, Long userId) {
+        logger.info("Генерация токена для пользователя: {}, роль: {}, ID: {}", username, role, userId);
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", role);
         claims.put("id", userId);
-        return createToken(claims, username);
+        String token = createToken(claims, username);
+        logger.info("Токен успешно сгенерирован для пользователя: {}", username);
+        return token;
     }
 
     private String createToken(Map<String, Object> claims, String subject) {

@@ -35,74 +35,97 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody UserRequest userRequest) {
-        logger.info("Попытка регистрации пользователя с номером: {}", userRequest.getEmail());
+        try {
+            logger.info("Попытка регистрации пользователя с email: {}", userRequest.getEmail());
 
-        if (userRepository.findByemail(userRequest.getEmail()) != null) {
-            logger.warn("Номер телефона уже используется: {}", userRequest.getEmail());
-            return ResponseEntity.badRequest().body("Phone number already in use");
+            if (userRequest.getEmail() == null || userRequest.getEmail().isEmpty()) {
+                logger.warn("Email не указан");
+                return ResponseEntity.badRequest().body("Email is required");
+            }
+
+            if (userRequest.getName() == null || userRequest.getName().isEmpty()) {
+                logger.warn("Имя не указано");
+                return ResponseEntity.badRequest().body("Name is required");
+            }
+
+            if (userRequest.getPassword() == null || userRequest.getPassword().isEmpty()) {
+                logger.warn("Пароль не указан");
+                return ResponseEntity.badRequest().body("Password is required");
+            }
+
+            if (userRepository.findByemail(userRequest.getEmail()) != null) {
+                logger.warn("Email уже используется: {}", userRequest.getEmail());
+                return ResponseEntity.badRequest().body("Email already in use");
+            }
+
+            User user = new User();
+            user.setEmail(userRequest.getEmail());
+            user.setName(userRequest.getName());
+            user.setBookedSeats(userRequest.getBookedSeats());
+            user.setPasswordHash(passwordEncoder.encode(userRequest.getPassword()));
+            user.setRole("client");
+
+            logger.info("Сохранение пользователя в базу данных: {}", user.getEmail());
+            User savedUser = userRepository.save(user);
+            logger.info("Пользователь сохранен с ID: {}", savedUser.getId());
+
+            String token = jwtUtil.generateToken(savedUser.getEmail(), savedUser.getRole(), savedUser.getId());
+            logger.info("Токен сгенерирован для пользователя: {}", savedUser.getId());
+
+            return ResponseEntity.ok(new JwtResponse(token));
+        } catch (Exception e) {
+            logger.error("Ошибка при регистрации пользователя: {}", e.getMessage(), e);
+            return ResponseEntity.status(500).body("Internal server error: " + e.getMessage());
         }
-
-        User user = new User();
-        user.setEmail(userRequest.getEmail());
-        user.setName(userRequest.getName());
-        user.setBookedSeats(userRequest.getBookedSeats());
-        user.setPasswordHash(passwordEncoder.encode(userRequest.getPassword()));
-        user.setRole("client");
-
-        User savedUser = userRepository.save(user);
-        String token = jwtUtil.generateToken(savedUser.getEmail(), savedUser.getRole(), savedUser.getId());
-
-        logger.info("Пользователь успешно зарегистрирован: {}", savedUser.getId());
-        return ResponseEntity.ok(new JwtResponse(token));
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthRequest authRequest) {
-        logger.info("Попытка входа. email: {}, email: {}",
-                authRequest.getEmail() != null ? authRequest.getEmail() : "не указан",
-                authRequest.getEmail() != null ? authRequest.getEmail() : "не указан");
+        try {
+            logger.info("Попытка входа. email: {}", authRequest.getEmail() != null ? authRequest.getEmail() : "не указан");
 
-        // Проверка входа пользователя
-        if (authRequest.getEmail() != null) {
-            User user = userRepository.findByemail(authRequest.getEmail());
-            if (user != null) {
-                logger.info("Найден пользователь с ID: {}", user.getId());
-
-                if (passwordEncoder.matches(authRequest.getPassword(), user.getPasswordHash())) {
-                    String token = jwtUtil.generateToken(user.getEmail(), user.getRole(), user.getId());
-                    logger.info("Успешный вход пользователя: {}", user.getId());
-                    return ResponseEntity.ok(new JwtResponse(token));
+            // Проверка входа пользователя
+            if (authRequest.getEmail() != null && authRequest.getPassword() != null) {
+                User user = userRepository.findByemail(authRequest.getEmail());
+                if (user != null) {
+                    logger.info("Найден пользователь с ID: {}", user.getId());
+                    if (passwordEncoder.matches(authRequest.getPassword(), user.getPasswordHash())) {
+                        String token = jwtUtil.generateToken(user.getEmail(), user.getRole(), user.getId());
+                        logger.info("Успешный вход пользователя: {}", user.getId());
+                        return ResponseEntity.ok(new JwtResponse(token));
+                    } else {
+                        logger.warn("Неверный пароль для пользователя: {}", user.getId());
+                    }
                 } else {
-                    logger.warn("Неверный пароль для пользователя: {}", user.getId());
+                    logger.warn("Пользователь не найден: {}", authRequest.getEmail());
                 }
-            } else {
-                logger.warn("Пользователь не найден: {}", authRequest.getEmail());
             }
-        }
 
-        // Проверка входа администратора
-        if (authRequest.getEmail() != null && authRequest.getUniqueCode() != null) {
-            Admin admin = adminRepository.findByEmail(authRequest.getEmail());
-            if (admin != null) {
-                logger.info("Найден админ с ID: {}", admin.getId());
-
-                if (admin.getUniqueCode().equals(authRequest.getUniqueCode())) {
-                    String token = jwtUtil.generateToken(admin.getEmail(), admin.getRole(), admin.getId());
-                    logger.info("Успешный вход администратора: {}", admin.getId());
-                    return ResponseEntity.ok(new JwtResponse(token));
+            // Проверка входа администратора
+            if (authRequest.getEmail() != null && authRequest.getUniqueCode() != null) {
+                Admin admin = adminRepository.findByEmail(authRequest.getEmail());
+                if (admin != null) {
+                    logger.info("Найден админ с ID: {}", admin.getId());
+                    if (admin.getUniqueCode().equals(authRequest.getUniqueCode())) {
+                        String token = jwtUtil.generateToken(admin.getEmail(), admin.getRole(), admin.getId());
+                        logger.info("Успешный вход администратора: {}", admin.getId());
+                        return ResponseEntity.ok(new JwtResponse(token));
+                    } else {
+                        logger.warn("Неверный уникальный код для администратора: {}", admin.getId());
+                    }
                 } else {
-                    logger.warn("Неверный уникальный код для администратора: {}", admin.getId());
+                    logger.warn("Администратор не найден: {}", authRequest.getEmail());
                 }
-            } else {
-                logger.warn("Администратор не найден: {}", authRequest.getEmail());
             }
-        }
 
-        logger.error("Неверные учетные данные");
-        return ResponseEntity.status(401).body("Invalid credentials");
+            logger.error("Неверные учетные данные");
+            return ResponseEntity.status(401).body("Invalid credentials");
+        } catch (Exception e) {
+            logger.error("Ошибка при входе: {}", e.getMessage(), e);
+            return ResponseEntity.status(500).body("Internal server error: " + e.getMessage());
+        }
     }
 
-    // Добавим тестовый эндпоинт, чтобы проверить, работают ли публичные методы
     @GetMapping("/test")
     public ResponseEntity<String> testPublicEndpoint() {
         logger.info("Тестовый публичный эндпоинт вызван");
