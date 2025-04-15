@@ -76,25 +76,6 @@
             background-color: #dc3545;
             color: white;
         }
-        .login-container {
-            max-width: 400px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: rgba(30, 30, 30, 0.8);
-            border-radius: 10px;
-        }
-        .login-form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        .login-form input {
-            padding: 12px;
-            border-radius: 5px;
-            border: 1px solid #333;
-            background-color: #222;
-            color: white;
-        }
         .status-indicator {
             display: inline-block;
             width: 10px;
@@ -118,23 +99,7 @@
 </head>
 <body>
 
-<div id="admin-login" class="admin-dashboard">
-    <div class="container">
-        <div class="login-container">
-            <div class="admin-logo">
-                <h2>GameOn</h2>
-                <p>Админ-панель</p>
-            </div>
-            <form id="admin-login-form" class="login-form">
-                <input type="email" id="admin-email-input" placeholder="Email" required>
-                <input type="text" id="admin-code-input" placeholder="Уникальный код" required>
-                <button type="submit" class="btn primary">Войти</button>
-            </form>
-        </div>
-    </div>
-</div>
-
-<div id="admin-dashboard" class="admin-dashboard" style="display: none;">
+<div id="admin-dashboard" class="admin-dashboard">
     <div class="container">
         <div class="dashboard-container">
             <div class="admin-header">
@@ -159,7 +124,7 @@
                         <tr>
                             <th>ID</th>
                             <th>Пользователь</th>
-                            <th>Телефон</th>
+                            <th>Email</th>
                             <th>Рабочее место</th>
                             <th>Начало</th>
                             <th>Конец</th>
@@ -182,7 +147,7 @@
                         <tr>
                             <th>ID</th>
                             <th>Имя</th>
-                            <th>Телефон</th>
+                            <th>Email</th>
                             <th>Бронирований</th>
                             <th>Действия</th>
                         </tr>
@@ -220,52 +185,54 @@
 <script>
     // API utility functions
     function apiCall(url, method, data, token = null) {
-        return fetch(url, {
-            method: method,
-            headers: {
-                'Content-Type': 'application/json',
-                ...(token && { 'Authorization': `Bearer ${token}` })
-            },
-            body: data ? JSON.stringify(data) : null
-        })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(err => Promise.reject(err));
-            }
+    return fetch(`http://localhost:8080${url}`, {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json',
+            ...(token && { 'Authorization': `Bearer ${token}` })
+        },
+        body: data ? JSON.stringify(data) : null
+    })
+    .then(response => {
+        console.log('API call:', url, 'Status:', response.status);
+        if (!response.ok) {
+            return response.text().then(text => {
+                console.error('API error response:', text);
+                throw new Error(text || 'Ошибка сервера');
+            });
+        }
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
             return response.json();
-        });
-    }
+        }
+        return response.text().then(text => ({ message: text }));
+    })
+    .catch(error => {
+        console.error('Fetch error for', url, ':', error.message);
+        throw error;
+    });
+}
 
     function formatDate(dateString) {
         const date = new Date(dateString);
         return date.toLocaleDateString('ru-RU') + ' ' + date.toLocaleTimeString('ru-RU', {hour: '2-digit', minute: '2-digit'});
     }
 
-    // Store token in local storage
-    function storeToken(token) {
-        localStorage.setItem('adminToken', token);
-    }
-
-    // Get token from local storage
     function getToken() {
-        return localStorage.getItem('adminToken');
+        const token = sessionStorage.getItem('jwtToken');
+        console.log('Получение токена:', token);
+        return token;
     }
 
-    // Clear token (for logout)
     function clearToken() {
-        localStorage.removeItem('adminToken');
+        sessionStorage.removeItem('jwtToken');
     }
 
     // Tab switching
     function switchTab(tabId) {
-        document.querySelectorAll('.admin-tab').forEach(tab => {
-            tab.classList.remove('active');
-        });
+        document.querySelectorAll('.admin-tab').forEach(tab => tab.classList.remove('active'));
         document.getElementById(tabId).classList.add('active');
-
-        document.querySelectorAll('.admin-nav .btn').forEach(btn => {
-            btn.classList.remove('active');
-        });
+        document.querySelectorAll('.admin-nav .btn').forEach(btn => btn.classList.remove('active'));
         document.getElementById(tabId + '-btn').classList.add('active');
     }
 
@@ -274,15 +241,13 @@
         const token = getToken();
         apiCall('/api/bookings', 'GET', null, token)
             .then(bookings => {
+                console.log('Бронирования загружены:', bookings);
                 const tableBody = document.getElementById('bookings-table-body');
                 tableBody.innerHTML = '';
-
                 bookings.forEach(booking => {
-                    // Get user details
                     apiCall(`/api/users/${booking.user.id}`, 'GET', null, token)
                         .then(user => {
                             const row = document.createElement('tr');
-
                             let statusClass = '';
                             switch(booking.status) {
                                 case 'pending': statusClass = 'status-pending'; break;
@@ -290,7 +255,6 @@
                                 case 'completed': statusClass = 'status-completed'; break;
                                 case 'cancelled': statusClass = 'status-cancelled'; break;
                             }
-
                             row.innerHTML = `
                                 <td>${booking.id}</td>
                                 <td>${user.name}</td>
@@ -306,34 +270,29 @@
                                 </td>
                             `;
                             tableBody.appendChild(row);
-
-                            // Add event listeners to buttons
                             row.querySelector('.edit-btn').addEventListener('click', function() {
-                                // Handle edit booking
                                 const newStatus = prompt('Введите новый статус (pending, confirmed, completed, cancelled)', booking.status);
                                 if (newStatus) {
                                     apiCall(`/api/bookings/${booking.id}`, 'PUT', { status: newStatus }, token)
                                         .then(() => loadBookings())
-                                        .catch(error => alert('Ошибка при обновлении бронирования: ' + error));
+                                        .catch(error => alert('Ошибка: ' + error.message));
                                 }
                             });
-
                             row.querySelector('.delete-btn').addEventListener('click', function() {
-                                if (confirm('Вы уверены, что хотите удалить это бронирование?')) {
+                                if (confirm('Вы уверены?')) {
                                     apiCall(`/api/bookings/${booking.id}`, 'DELETE', null, token)
-                                        .then(() => {
-                                            row.remove();
-                                            alert('Бронирование удалено');
-                                        })
-                                        .catch(error => alert('Ошибка при удалении бронирования: ' + error));
+                                        .then(() => loadBookings())
+                                        .catch(error => alert('Ошибка: ' + error.message));
                                 }
                             });
-                        });
+                        })
+                        .catch(error => console.error('Ошибка загрузки пользователя:', error));
                 });
             })
             .catch(error => {
-                console.error('Error loading bookings', error);
-                alert('Ошибка загрузки бронирований: ' + error);
+                console.error('Ошибка загрузки бронирований:', error.message);
+                alert('Ошибка загрузки бронирований: ' + error.message);
+                window.location.href = 'index.html';
             });
     }
 
@@ -342,9 +301,9 @@
         const token = getToken();
         apiCall('/api/users', 'GET', null, token)
             .then(users => {
+                console.log('Пользователи загружены:', users);
                 const tableBody = document.getElementById('users-table-body');
                 tableBody.innerHTML = '';
-
                 users.forEach(user => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
@@ -357,23 +316,19 @@
                         </td>
                     `;
                     tableBody.appendChild(row);
-
-                    // Add event listener to delete button
                     row.querySelector('.delete-btn').addEventListener('click', function() {
-                        if (confirm('Вы уверены, что хотите удалить этого пользователя?')) {
+                        if (confirm('Вы уверены?')) {
                             apiCall(`/api/users/${user.id}`, 'DELETE', null, token)
-                                .then(() => {
-                                    row.remove();
-                                    alert('Пользователь удален');
-                                })
-                                .catch(error => alert('Ошибка при удалении пользователя: ' + error));
+                                .then(() => loadUsers())
+                                .catch(error => alert('Ошибка: ' + error.message));
                         }
                     });
                 });
             })
             .catch(error => {
-                console.error('Error loading users', error);
-                alert('Ошибка загрузки пользователей: ' + error);
+                console.error('Ошибка загрузки пользователей:', error.message);
+                alert('Ошибка загрузки пользователей: ' + error.message);
+                window.location.href = 'index.html';
             });
     }
 
@@ -382,9 +337,9 @@
         const token = getToken();
         apiCall('/api/workstations', 'GET', null, token)
             .then(workstations => {
+                console.log('Рабочие станции загружены:', workstations);
                 const tableBody = document.getElementById('workstations-table-body');
                 tableBody.innerHTML = '';
-
                 workstations.forEach(station => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
@@ -398,62 +353,30 @@
                         </td>
                     `;
                     tableBody.appendChild(row);
-
-                    // Add event listener to edit button
                     row.querySelector('.edit-btn').addEventListener('click', function() {
                         const available = confirm('Изменить статус доступности?');
-                        apiCall(`/api/workstations/${station.id}`, 'PUT',
-                            { ...station, available: available },
-                            token)
+                        apiCall(`/api/workstations/${station.id}`, 'PUT', { ...station, available: available }, token)
                             .then(() => loadWorkstations())
-                            .catch(error => alert('Ошибка при обновлении рабочего места: ' + error));
+                            .catch(error => alert('Ошибка: ' + error.message));
                     });
                 });
             })
             .catch(error => {
-                console.error('Error loading workstations', error);
-                alert('Ошибка загрузки рабочих мест: ' + error);
+                console.error('Ошибка загрузки станций:', error.message);
+                alert('Ошибка загрузки станций: ' + error.message);
+                window.location.href = 'index.html';
             });
     }
-
-    // Admin login form
-    document.getElementById('admin-login-form').addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        const loginData = {
-            email: document.getElementById('admin-email-input').value,
-            uniqueCode: document.getElementById('admin-code-input').value
-        };
-
-        apiCall('/api/auth/login', 'POST', loginData)
-            .then(response => {
-                console.log('Admin login successful', response);
-                storeToken(response.token);
-
-                // Show dashboard
-                document.getElementById('admin-login').style.display = 'none';
-                document.getElementById('admin-dashboard').style.display = 'block';
-
-                // Load initial data
-                loadBookings();
-            })
-            .catch(error => {
-                console.error('Admin login failed', error);
-                alert('Ошибка входа: ' + (error.message || 'Проверьте введенные данные'));
-            });
-    });
 
     // Tab switching
     document.getElementById('bookings-tab-btn').addEventListener('click', function() {
         switchTab('bookings-tab');
         loadBookings();
     });
-
     document.getElementById('users-tab-btn').addEventListener('click', function() {
         switchTab('users-tab');
         loadUsers();
     });
-
     document.getElementById('workstations-tab-btn').addEventListener('click', function() {
         switchTab('workstations-tab');
         loadWorkstations();
@@ -462,21 +385,26 @@
     // Logout
     document.getElementById('admin-logout-btn').addEventListener('click', function() {
         clearToken();
-        document.getElementById('admin-dashboard').style.display = 'none';
-        document.getElementById('admin-login').style.display = 'block';
+        window.location.href = 'index.html';
     });
 
-    // Check if we've been redirected from main page with admin login
+    // Check admin login on page load
     const urlParams = new URLSearchParams(window.location.search);
     const adminLogin = urlParams.get('adminLogin');
-    
     if (adminLogin === 'true') {
         const token = getToken();
         if (token) {
-            document.getElementById('admin-login').style.display = 'none';
-            document.getElementById('admin-dashboard').style.display = 'block';
+            console.log('Токен найден, загрузка панели:', token);
             loadBookings();
+            loadUsers();
+            loadWorkstations();
+        } else {
+            console.error('Токен не найден, перенаправление на главную');
+            window.location.href = 'index.html';
         }
+    } else {
+        console.error('Параметр adminLogin отсутствует, перенаправление на главную');
+        window.location.href = 'index.html';
     }
 </script>
 </body>

@@ -416,9 +416,15 @@ question.addEventListener('click', () => {
 
 // Admin login form toggle
 document.getElementById('admin-email-submit').addEventListener('click', function(e) {
-e.preventDefault();
-document.getElementById('email-form').classList.remove('active');
-document.getElementById('password-form').classList.add('active');
+    e.preventDefault();
+    const email = document.getElementById('admin-email').value;
+    if (!email) {
+        alert('Пожалуйста, введите email');
+        return;
+    }
+    console.log('Переход к вводу уникального кода для:', email);
+    document.getElementById('email-form').classList.remove('active');
+    document.getElementById('password-form').classList.add('active');
 });
 
 document.getElementById('register-form').addEventListener('submit', function(e) {
@@ -609,10 +615,8 @@ return JSON.parse(jsonPayload).id;
 }
 
 // API utility functions
-const BASE_URL = 'http://localhost:8080';
-
 function apiCall(url, method, data, token = null) {
-    return fetch(url, {
+    return fetch(`http://localhost:8080${url}`, {
         method: method,
         headers: {
             'Content-Type': 'application/json',
@@ -621,25 +625,17 @@ function apiCall(url, method, data, token = null) {
         body: data ? JSON.stringify(data) : null
     })
     .then(response => {
-        console.log('Response status:', response.status);
-        console.log('Response headers:', response.headers.get('Content-Type'));
+        console.log('API call:', url, 'Status:', response.status);
         if (!response.ok) {
-            return response.text().then(text => {
-                console.log('Error response body:', text);
-                try {
-                    return Promise.reject(JSON.parse(text));
-                } catch (e) {
-                    return Promise.reject(new Error(text || 'Server error'));
-                }
+            return response.json().then(err => {
+                console.error('API error response:', err);
+                throw new Error(err.message || 'Ошибка сервера');
             });
         }
-        return response.text().then(text => {
-            console.log('Success response body:', text);
-            return text ? JSON.parse(text) : {};
-        });
+        return response.json();
     })
     .catch(error => {
-        console.error('Fetch error:', error);
+        console.error('Fetch error for', url, ':', error.message);
         throw error;
     });
 }
@@ -647,12 +643,10 @@ function apiCall(url, method, data, token = null) {
 // Update the admin login code in the main page
 document.getElementById('admin-login-submit').addEventListener('click', function(e) {
     e.preventDefault();
-
     const loginData = {
         email: document.getElementById('admin-email').value,
-        uniqueCode: document.getElementById('admin-unique-code').value // Исправленный id
+        uniqueCode: document.getElementById('admin-unique-code').value
     };
-
     apiCall('/api/auth/login', 'POST', loginData)
         .then(response => {
             console.log('Admin login successful', response);
@@ -667,7 +661,8 @@ document.getElementById('admin-login-submit').addEventListener('click', function
 
 // Store token in session storage
 function storeToken(token) {
-sessionStorage.setItem('jwtToken', token);
+    console.log('Сохранение токена:', token);
+    sessionStorage.setItem('jwtToken', token);
 }
 
 // Get token from session storage
