@@ -382,12 +382,11 @@
                         <button id="admin-email-submit" class="btn primary">Далее</button>
                     </div>
                     <div id="password-form" class="login-step">
-                        <input type="password" placeholder="Пароль" id="admin-password">
+                        <input type="text" placeholder="Уникальный код" id="admin-unique-code">
                         <button id="admin-login-submit" class="btn primary">Войти</button>
                     </div>
                 </div>
             </div>
-        </div>
         <div class="copyright">
             <p>Copyright © 2025 - 2025 GameOn - All rights reserved</p>
         </div>
@@ -633,15 +632,13 @@ document.getElementById('admin-login-submit').addEventListener('click', function
 
     const loginData = {
         email: document.getElementById('admin-email').value,
-        uniqueCode: document.getElementById('admin-password').value // Using password field for unique code
+        uniqueCode: document.getElementById('admin-unique-code').value // Исправленный id
     };
 
     apiCall('/api/auth/login', 'POST', loginData)
         .then(response => {
             console.log('Admin login successful', response);
             storeToken(response.token);
-
-            // Redirect to admin dashboard with a parameter
             window.location.href = 'admin.html?adminLogin=true';
         })
         .catch(error => {
