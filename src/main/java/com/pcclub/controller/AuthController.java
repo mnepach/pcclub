@@ -35,22 +35,22 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody UserRequest userRequest) {
-        logger.info("Попытка регистрации пользователя с номером: {}", userRequest.getPhoneNumber());
+        logger.info("Попытка регистрации пользователя с номером: {}", userRequest.getEmail());
 
-        if (userRepository.findByPhoneNumber(userRequest.getPhoneNumber()) != null) {
-            logger.warn("Номер телефона уже используется: {}", userRequest.getPhoneNumber());
+        if (userRepository.findByemail(userRequest.getEmail()) != null) {
+            logger.warn("Номер телефона уже используется: {}", userRequest.getEmail());
             return ResponseEntity.badRequest().body("Phone number already in use");
         }
 
         User user = new User();
-        user.setPhoneNumber(userRequest.getPhoneNumber());
+        user.setEmail(userRequest.getEmail());
         user.setName(userRequest.getName());
         user.setBookedSeats(userRequest.getBookedSeats());
         user.setPasswordHash(passwordEncoder.encode(userRequest.getPassword()));
         user.setRole("client");
 
         User savedUser = userRepository.save(user);
-        String token = jwtUtil.generateToken(savedUser.getPhoneNumber(), savedUser.getRole(), savedUser.getId());
+        String token = jwtUtil.generateToken(savedUser.getEmail(), savedUser.getRole(), savedUser.getId());
 
         logger.info("Пользователь успешно зарегистрирован: {}", savedUser.getId());
         return ResponseEntity.ok(new JwtResponse(token));
@@ -58,25 +58,25 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthRequest authRequest) {
-        logger.info("Попытка входа. phoneNumber: {}, email: {}",
-                authRequest.getPhoneNumber() != null ? authRequest.getPhoneNumber() : "не указан",
+        logger.info("Попытка входа. email: {}, email: {}",
+                authRequest.getEmail() != null ? authRequest.getEmail() : "не указан",
                 authRequest.getEmail() != null ? authRequest.getEmail() : "не указан");
 
         // Проверка входа пользователя
-        if (authRequest.getPhoneNumber() != null) {
-            User user = userRepository.findByPhoneNumber(authRequest.getPhoneNumber());
+        if (authRequest.getEmail() != null) {
+            User user = userRepository.findByemail(authRequest.getEmail());
             if (user != null) {
                 logger.info("Найден пользователь с ID: {}", user.getId());
 
                 if (passwordEncoder.matches(authRequest.getPassword(), user.getPasswordHash())) {
-                    String token = jwtUtil.generateToken(user.getPhoneNumber(), user.getRole(), user.getId());
+                    String token = jwtUtil.generateToken(user.getEmail(), user.getRole(), user.getId());
                     logger.info("Успешный вход пользователя: {}", user.getId());
                     return ResponseEntity.ok(new JwtResponse(token));
                 } else {
                     logger.warn("Неверный пароль для пользователя: {}", user.getId());
                 }
             } else {
-                logger.warn("Пользователь не найден: {}", authRequest.getPhoneNumber());
+                logger.warn("Пользователь не найден: {}", authRequest.getEmail());
             }
         }
 

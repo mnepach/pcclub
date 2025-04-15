@@ -74,7 +74,7 @@ public class UserController {
         Long userId = claims.get("id", Long.class);
 
         if ("admin".equals(role) || userId.equals(id)) {
-            user.setPhoneNumber(userDetails.getPhoneNumber());
+            user.setEmail(userDetails.getEmail());
             user.setName(userDetails.getName());
             user.setBookedSeats(userDetails.getBookedSeats());
             return ResponseEntity.ok(userRepository.save(user));

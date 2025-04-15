@@ -609,21 +609,39 @@ return JSON.parse(jsonPayload).id;
 }
 
 // API utility functions
+const BASE_URL = 'http://localhost:8080';
+
 function apiCall(url, method, data, token = null) {
-return fetch(url, {
-    method: method,
-    headers: {
-        'Content-Type': 'application/json',
-        ...(token && { 'Authorization': `Bearer ${token}` })
-    },
-    body: data ? JSON.stringify(data) : null
-})
-.then(response => {
-    if (!response.ok) {
-        return response.json().then(err => Promise.reject(err));
-    }
-    return response.json();
-});
+    return fetch(url, {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json',
+            ...(token && { 'Authorization': `Bearer ${token}` })
+        },
+        body: data ? JSON.stringify(data) : null
+    })
+    .then(response => {
+        console.log('Response status:', response.status);
+        console.log('Response headers:', response.headers.get('Content-Type'));
+        if (!response.ok) {
+            return response.text().then(text => {
+                console.log('Error response body:', text);
+                try {
+                    return Promise.reject(JSON.parse(text));
+                } catch (e) {
+                    return Promise.reject(new Error(text || 'Server error'));
+                }
+            });
+        }
+        return response.text().then(text => {
+            console.log('Success response body:', text);
+            return text ? JSON.parse(text) : {};
+        });
+    })
+    .catch(error => {
+        console.error('Fetch error:', error);
+        throw error;
+    });
 }
 
 // Update the admin login code in the main page
