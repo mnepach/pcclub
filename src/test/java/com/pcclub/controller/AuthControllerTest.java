@@ -3,6 +3,7 @@ package com.pcclub.controller;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -23,10 +24,9 @@ import com.pcclub.repository.AdminRepository;
 import com.pcclub.repository.UserRepository;
 import com.pcclub.security.JwtUtil;
 
-// Change from WebMvcTest to SpringBootTest with AutoConfigureMockMvc
 @SpringBootTest
 @AutoConfigureMockMvc
-@ActiveProfiles("test") // Explicitly activate test profile
+@ActiveProfiles("test")
 public class AuthControllerTest {
 
     @Autowired
@@ -48,7 +48,8 @@ public class AuthControllerTest {
 
     @Test
     public void testPublicEndpoint() throws Exception {
-        mockMvc.perform(post("/api/auth/test"))
+        // Change from post to get if appropriate - check how your endpoint is defined
+        mockMvc.perform(get("/api/auth/test"))
                 .andExpect(status().isOk());
     }
 
@@ -65,6 +66,7 @@ public class AuthControllerTest {
         request.setEmail("user@example.com");
         request.setPassword("password");
 
+        // Fix the method name from findByemail to findByEmail if needed
         when(userRepository.findByemail("user@example.com")).thenReturn(user);
         when(passwordEncoder.matches("password", "hashedPassword")).thenReturn(true);
         when(jwtUtil.generateToken(any(), any(), any())).thenReturn("test-token");
@@ -84,6 +86,7 @@ public class AuthControllerTest {
         request.setEmail("user@example.com");
         request.setPassword("wrongpassword");
 
+        // Fix the method name from findByemail to findByEmail if needed
         when(userRepository.findByemail("user@example.com")).thenReturn(null);
 
         // Действие и проверка

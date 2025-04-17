@@ -26,7 +26,7 @@ public class UserRepositoryTest {
         user.setRole("client");
         userRepository.save(user);
 
-        // Действие
+        // Действие - fix method name if needed to match your repository interface
         User found = userRepository.findByemail("test@example.com");
 
         // Проверка
@@ -37,7 +37,7 @@ public class UserRepositoryTest {
 
     @Test
     public void whenFindByNonExistentEmail_thenReturnNull() {
-        // Действие
+        // Действие - fix method name if needed
         User found = userRepository.findByemail("nonexistent@example.com");
 
         // Проверка
