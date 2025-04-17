@@ -1,4 +1,4 @@
-package com.pcclub.controller;
+package com.pcclub;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pcclub.model.Admin;
