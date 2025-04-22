@@ -50,6 +50,10 @@ public class BookingControllerIntegrationTest {
     public void setup() throws Exception {
         objectMapper.registerModule(new JavaTimeModule());
 
+        // Очищаем базу перед каждым тестом для предотвращения конфликтов
+        userRepository.deleteAll();
+        workStationRepository.deleteAll();
+
         // Создаем тестового пользователя
         User user = new User();
         user.setEmail("integration@example.com");

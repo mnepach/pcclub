@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Entity
 @Data
+@Table(name = "users") // Изменяем имя таблицы с "user" на "users"
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
